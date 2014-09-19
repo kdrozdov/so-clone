@@ -1,0 +1,17 @@
+
+doctype html
+html
+  head
+    meta charset="utf-8"
+    title == content_for?(:title) ? yield(:title) : "Stackoverflow (clone)"
+
+    = stylesheet_link_tag "application"
+    = javascript_include_tag "application"
+    = csrf_meta_tag
+
+  body
+    = render 'layouts/header'
+
+    .container
+      = render 'layouts/alerts'
+      == yield

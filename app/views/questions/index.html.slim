@@ -1,0 +1,7 @@
+
+h2 Questions
+
+ul.list-group
+	- @questions.each do |question|
+		li.list-group-item
+			= link_to question.title, question

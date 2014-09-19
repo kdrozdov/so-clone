@@ -1,0 +1,13 @@
+.navbar.navbar-inverse role="navigation"
+      .container
+        .navbar-header
+          button.navbar-toggle type="button" data-toggle="collapse" data-target="#navbar-collapse-1"
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          = link_to "Stackoverflow clone", root_path, class: 'navbar-brand'
+        .collapse.navbar-collapse#navbar-collapse-1
+          ul.nav.navbar-nav
+            li 
+              = link_to "Ask question", new_question_path              

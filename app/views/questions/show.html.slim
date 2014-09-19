@@ -1,0 +1,17 @@
+
+h2 = @question.title
+
+p = @question.body
+br
+
+h2 = pluralize(@question.answers.count, "Answer")
+
+ul.list-group
+	= render @question.answers
+
+= form_for @answer, url: question_answers_path(@question.id) do |f|
+	div.form-group
+		= f.label :body
+		= f.text_area :body, class: "form-control"
+
+	= f.submit "Create answer", class: "btn btn-primary"
