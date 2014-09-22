@@ -12,6 +12,10 @@ group :test do
 	gem 'launchy'
 end
 
+group :production do
+	gem 'rails_12factor', '0.0.2'
+end
+
 gem 'pg'
 
 gem 'sass-rails', '~> 4.0.3'
