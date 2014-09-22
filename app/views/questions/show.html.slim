@@ -1,4 +1,7 @@
 
+-if user_signed_in? && current_user?(@question.author)
+	= link_to "Edit question", edit_question_path
+
 h2 = @question.title
 
 p = @question.body

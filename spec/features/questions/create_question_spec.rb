@@ -14,7 +14,7 @@ feature "Create question", %q{
     fill_in "Title", :with => "Question title"
     fill_in "Body", :with => "Question body"
 
-    click_button "Create question"
+    click_button "Save question"
 
     expect(page).to have_content "Your question successfully created."
     expect(page).to have_content "Question title"
