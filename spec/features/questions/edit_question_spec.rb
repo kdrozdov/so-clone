@@ -17,7 +17,7 @@ feature "Edit question", %q{
 		click_on "Edit question"
 		fill_in "Title", with: "Edited title"
 		fill_in "Body", with: "Edited body"
-		click_on "Save"
+		click_on "Save question"
 
 		expect(current_path).to eq question_path(question)	
 		expect(page).to have_content "Edited title"
@@ -28,12 +28,12 @@ feature "Edit question", %q{
 		sign_in(user)
 		visit question_path(question)
 
-		expect(page).not_to have_link "Edit"
+		expect(page).not_to have_link "Edit question"
 	end
 
 	scenario "Non-authenticated user can not edit question" do
 		visit question_path(question)
 
-		expect(page).not_to have_link "Edit"
+		expect(page).not_to have_link "Edit question"
 	end
 end

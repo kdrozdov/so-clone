@@ -1,6 +1,8 @@
 
 -if user_signed_in? && current_user?(@question.author)
 	= link_to "Edit question", edit_question_path
+	br
+	= link_to "Delete question", @question, method: :delete, data: { confirm: true }
 
 h2 = @question.title
 
