@@ -1,7 +1,7 @@
 
 -if user_signed_in? && current_user?(@question.author)
 	= link_to "Edit question", edit_question_path
-	br
+	' &nbsp;
 	= link_to "Delete question", @question, method: :delete, data: { confirm: true }
 
 h2 = @question.title
@@ -18,9 +18,9 @@ ul.list-group
 	= form_for @answer, url: question_answers_path(@question.id) do |f|
 		div.form-group
 			= f.label :body
-			= f.text_area :body, class: "form-control"
+			= f.text_area :body
 
-		= f.submit "Create answer", class: "btn btn-primary"
+		= f.submit "Create answer", class: "button"
 - else
 	 p
         ' You should

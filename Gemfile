@@ -1,6 +1,10 @@
 source 'https://rubygems.org'
 gem 'rails', '4.1.6'
 
+group :development do 
+	gem 'rails_layout'
+end
+
 group :development, :test do
 	gem 'rspec-rails'
 	gem 'factory_girl_rails'
@@ -27,6 +31,5 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 gem 'slim-rails'
-gem 'bootstrap-sass', '~> 3.2.0'
+gem 'foundation-rails'
 gem 'devise'
-gem 'devise-bootstrap-views'
