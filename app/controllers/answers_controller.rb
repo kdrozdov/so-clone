@@ -2,13 +2,12 @@ class AnswersController < ApplicationController
 	before_action :authenticate_user!, only: [:create]
 	def create
 		@question = Question.find(params[:question_id])
-		@answer = @question.answers.new(answer_params)
+		@question.answers.create(answer_params)
+		# @answer = @question.answers.build(answer_params)
+		# if @answer.save
+		# 	flash[:success] = "Your answer successfully created."
+		# end
 
-		if @answer.save
-			flash[:success] = "Your answer successfully created."
-		end
-
-		redirect_to @question
 	end
 
 	private 

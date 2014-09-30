@@ -9,19 +9,22 @@ feature "Create answer", %q{
   given(:question) { create(:question) }
   given(:user) { create(:user) }
 
-  scenario "Authenticated user creates answer" do
+  scenario "Authenticated user creates answer", js: true do
     sign_in(user)
-    visit question_path question
+    visit question_path(question)
 
-    fill_in "Body", :with => "Answer body"
+    fill_in "Your answer", :with => "My answer"
     click_on "Create answer"
 
-    expect(page).to have_text("Your answer successfully created.")
-    expect(page).to have_text("Answer body")
+    expect(current_path).to eq question_path(question)
+    # expect(page).to have_text("Your answer successfully created.")
+    within ".answers" do
+      expect(page).to have_text("My answer")
+    end
   end
 
   scenario "Non-authenticated user tried to create answer" do
-    visit question_path question
+    visit question_path(question)
 
     expect(page).to have_content "You should sign in or sign up to answer this question"
   end
