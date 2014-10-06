@@ -1,4 +1,4 @@
-require "rails_helper"
+require "feature_helper"
 
 feature "Edit question", %q{
 	In order to amend

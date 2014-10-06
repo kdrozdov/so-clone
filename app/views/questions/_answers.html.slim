@@ -1,4 +1,14 @@
-	
+
 h2 = pluralize(@question.answers.count, "Answer")
 - @question.answers.each do |answer|
-	p = answer.body
+  div id="answer_#{ answer.id }"
+    p = answer.body
+    - if user_signed_in? and current_user?(answer.author)
+      a.edit_answer_link[data={ answer_id: answer.id }] Edit
+      div id="answer_errors_#{answer.id}"
+      = form_for [@question, answer], remote: true,  html: { id: "answer_form_#{answer.id}", class: "answer-edit-form" } do |f|
+        = f.label :body, 'Answer'
+        = f.text_area :body
+        = f.submit 'Save', class: 'button tiny'
+        ' &nbsp; 
+        a.button.tiny.cancel_edit_link Cancel

@@ -1,20 +1,20 @@
 source 'https://rubygems.org'
 gem 'rails', '4.1.6'
 
-group :development do 
+group :development do
 	gem 'rails_layout'
 end
 
 group :development, :test do
 	gem 'rspec-rails'
-	gem 'factory_girl_rails'
-	gem 'selenium-webdriver'
-	gem 'database_cleaner'
 end
 
 group :test do
 	gem 'shoulda-matchers'
+	gem 'factory_girl_rails'
 	gem 'capybara'
+	gem 'poltergeist'
+	gem 'database_cleaner'
 	gem 'launchy'
 end
 

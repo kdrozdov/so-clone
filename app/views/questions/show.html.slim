@@ -15,6 +15,7 @@ br
 
 - if user_signed_in?
 	= form_for [@question, @answer], remote:true do |f|
+		.form-errors
 		= f.label :body, 'Your answer'
 		= f.text_area :body
 

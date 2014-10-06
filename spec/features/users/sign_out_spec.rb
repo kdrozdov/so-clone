@@ -1,4 +1,4 @@
-require "rails_helper"
+require "feature_helper"
 
 feature "User sign out", %q{
 	As an authenticated user

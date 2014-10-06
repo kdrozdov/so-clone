@@ -10,9 +10,4 @@ FactoryGirl.define do
   	body nil
   	association :author, factory: :user
   end
-
-  factory :question_without_author, class: "Question" do
-    title nil
-    body nil
-  end
 end

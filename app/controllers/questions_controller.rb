@@ -1,6 +1,6 @@
 class QuestionsController <  ApplicationController
-	before_action :load_question, only: [:show, :edit, :update, :destroy]
 	before_action :authenticate_user!, except: [:index, :show]
+	before_action :set_question, only: [:show, :edit, :update, :destroy]
 	before_action :verify_authorship, only: [:edit, :update, :destroy]
 
 	def index
@@ -49,7 +49,7 @@ class QuestionsController <  ApplicationController
 		params.require(:question).permit(:title, :body)
 	end
 
-	def load_question
+	def set_question
 		@question = Question.find(params[:id])
 	end
 

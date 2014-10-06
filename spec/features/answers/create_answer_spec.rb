@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'feature_helper'
 
 feature "Create answer", %q{
   In order to help solve the problem
@@ -21,6 +21,15 @@ feature "Create answer", %q{
     within ".answers" do
       expect(page).to have_text("My answer")
     end
+  end
+
+  scenario "Authenticated user try to create invalid answer", js: true do 
+    sign_in(user)
+    visit question_path(question)
+
+    click_on "Create answer"
+
+    expect(page).to have_content "Body can't be blank"
   end
 
   scenario "Non-authenticated user tried to create answer" do

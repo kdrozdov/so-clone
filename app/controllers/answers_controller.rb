@@ -1,18 +1,36 @@
 class AnswersController < ApplicationController
-	before_action :authenticate_user!, only: [:create]
-	def create
-		@question = Question.find(params[:question_id])
-		@question.answers.create(answer_params)
-		# @answer = @question.answers.build(answer_params)
-		# if @answer.save
-		# 	flash[:success] = "Your answer successfully created."
-		# end
+	before_action :authenticate_user!, only: [:create, :update]
+	before_action :set_question, only: [:create, :update]
+	before_action :set_answer, only: [:update]
+	before_action :verify_authorship, only: [:update]
 
+	def create
+		@answer = @question.answers.build(answer_params)
+		@answer.author = current_user
+		@answer.save
 	end
 
-	private 
-	
+	def update
+		@answer.update(answer_params)
+	end
+
+	private
+
 	def answer_params
 		params.require(:answer).permit(:body)
+	end
+
+	def verify_authorship
+		if @answer.author != current_user
+			head :forbidden
+		end
+	end
+
+	def set_question
+		@question = Question.find(params[:question_id])
+	end
+
+	def set_answer
+		@answer = Answer.find(params[:id])
 	end
 end
