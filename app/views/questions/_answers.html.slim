@@ -3,8 +3,10 @@ h2 = pluralize(@question.answers.count, "Answer")
 - @question.answers.each do |answer|
   div id="answer_#{ answer.id }"
     p = answer.body
+
     - if user_signed_in? and current_user?(answer.author)
-      a.edit_answer_link[data={ answer_id: answer.id }] Edit
+      = link_to 'Delete', question_answer_path(@question, answer), method: :delete, remote: true, data: { confirm: true }
+      a.edit_answer_link href="" data={ answer_id: answer.id } Edit 
       div id="answer_errors_#{answer.id}"
       = form_for [@question, answer], remote: true,  html: { id: "answer_form_#{answer.id}", class: "answer-edit-form" } do |f|
         = f.label :body, 'Answer'

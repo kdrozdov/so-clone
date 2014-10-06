@@ -43,11 +43,6 @@ RSpec.describe AnswersController do
 		it_behaves_like 'AJAX inhospitable'
 		it_behaves_like 'AJAX owner verifier'
 
-		it 'renders update view' do
-			request
-			expect(response).to render_template :update
-		end
-
 		context "with valid attributes" do
 			it "assigns the requested answer to @answer" do
 				request
@@ -56,7 +51,7 @@ RSpec.describe AnswersController do
 			end
 
 			it "changes answer attributes" do
-				patch :update, id:answer, question_id: question, answer: { body: "new body" }, format: :js
+				patch :update, id:answer, question_id: answer.question, answer: { body: "new body" }, format: :js
 				answer.reload
 
 				expect(answer.body).to eq "new body"
@@ -73,5 +68,24 @@ RSpec.describe AnswersController do
 			end
 		end
 
+		it 'renders update view' do
+			request
+			expect(response).to render_template :update
+		end
+	end
+
+	describe "DELETE #destroy", login: :answer_author do
+		let(:request) { delete :destroy, id: answer, question_id: answer.question, format: :js }
+		it_behaves_like 'AJAX inhospitable'
+		it_behaves_like 'AJAX owner verifier'
+
+		it "deletes answer" do
+			expect { request }.to change(@question.answers, :count).by(-1)
+		end
+
+		it 'renders destroy view' do
+			request
+			expect(response).to render_template :destroy
+		end
 	end
 end

@@ -25,6 +25,7 @@ module ControllerSharedContexts
     before do |e|
       unless e.metadata[:skip_login]
         @user = answer.author
+        @question = answer.question
         @request.env["devise.mapping"] = Devise.mappings[:user]
         sign_in @user
       end

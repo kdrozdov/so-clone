@@ -2,7 +2,7 @@ require 'feature_helper'
 
 feature "Create answer", %q{
   In order to help solve the problem
-  As an authenticated user
+  As an author of the answer
   I want to be able to answer the question
 } do
 
