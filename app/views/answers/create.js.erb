@@ -4,5 +4,5 @@
 	<% end %>
 <% else %>
 	$('.answers').html('<%= j render 'questions/answers' %>');
-	$('#answer_body').val('');
+	$('#new_answer').find('#answer_body').val('');
 <% end %>
