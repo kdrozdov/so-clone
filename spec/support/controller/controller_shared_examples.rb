@@ -24,7 +24,7 @@ module ControllerSharedExamples
     end
   end
 
-   shared_examples_for 'AJAX owner verifier' do
+  shared_examples_for 'AJAX owner verifier' do
     it 'responses with 403 Forbidden', skip_login: true do
       login_user
       request

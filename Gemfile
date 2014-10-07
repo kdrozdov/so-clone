@@ -3,6 +3,8 @@ gem 'rails', '4.1.6'
 
 group :development do
 	gem 'rails_layout'
+  gem 'rubocop'
+  gem 'annotate'
 end
 
 group :development, :test do

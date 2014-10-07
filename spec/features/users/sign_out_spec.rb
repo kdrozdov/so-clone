@@ -1,22 +1,22 @@
-require "feature_helper"
+require 'feature_helper'
 
-feature "User sign out", %q{
-	As an authenticated user
-	I want to be able to sign in
+feature 'User sign out', %q{
+  As an authenticated user
+  I want to be able to sign in
 } do
-	given(:user) { create(:user) }
+  given(:user) { create(:user) }
 
-	scenario "Authenticated user try to sign out" do 
-		sign_in(user)
-		click_on "Sign out"
+  scenario 'Authenticated user try to sign out' do
+    sign_in(user)
+    click_on 'Sign out'
 
-		expect(page).to have_content "Signed out successfully."
-		expect(current_path).to eq root_path
-	end
+    expect(page).to have_content 'Signed out successfully.'
+    expect(current_path).to eq root_path
+  end
 
-	scenario "Non-authenticated user can not sign out" do
-		visit root_path
+  scenario 'Non-authenticated user can not sign out' do
+    visit root_path
 
-		expect(page).not_to have_link "Sign out"
-	end
+    expect(page).not_to have_link 'Sign out'
+  end
 end

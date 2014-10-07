@@ -1,6 +1,6 @@
 require 'feature_helper'
 
-feature "Create question", %q{ 
+feature 'Create question', %q{
   In order to get answer from community
   As an authenticated user
   I want to be able to ask questions
@@ -8,22 +8,22 @@ feature "Create question", %q{
 
   given(:user) { create(:user) }
 
-  scenario "Authenticated user creates question" do
+  scenario 'Authenticated user creates question' do
     sign_in(user)
     visit new_question_path
-    fill_in "Title", :with => "Question title"
-    fill_in "Body", :with => "Question body"
+    fill_in 'Title', with: 'Question title'
+    fill_in 'Body', with: 'Question body'
 
-    click_button "Save question"
+    click_button 'Save question'
 
-    expect(page).to have_content "Your question successfully created."
-    expect(page).to have_content "Question title"
-    expect(page).to have_content "Question body"
+    expect(page).to have_content 'Your question successfully created.'
+    expect(page).to have_content 'Question title'
+    expect(page).to have_content 'Question body'
   end
 
-  scenario "Non-authenticated user tries to create question" do
+  scenario 'Non-authenticated user tries to create question' do
     visit new_question_path
 
-    expect(page).to have_content "You need to sign in or sign up before continuing."
+    expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
 end

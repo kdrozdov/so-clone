@@ -1,18 +1,27 @@
 $ ->
-  current_answer = 0;
+  currentAnswer = 0;
 
-  $(document).on 'click', '.edit_answer_link', (e) ->
+  $(document).on 'click', '.edit-answer-link', (e) ->
     e.preventDefault()
-    if self.current_answer > 0 
-      $("#answer_form_" + self.current_answer).hide()
-      $('#answer_errors_' + self.current_answer).html('')
-      $('.edit_answer_link').show()
+    if self.currentAnswer > 0 
+      answerForm(self.currentAnswer).hide()
+      answerErrors(self.currentAnswer).html('')
+      editLink(self.currentAnswer).show()
     $(this).hide()
-    self.current_answer = $(this).data('answerId')
-    $("#answer_form_" + self.current_answer).show()
+    self.currentAnswer = $(this).data('answerId')
+    answerForm(self.currentAnswer).show()
 
-  $(document).on 'click', '.cancel_edit_link', (e) ->
+  $(document).on 'click', '.cancel-edit-link', (e) ->
     e.preventDefault()
-    $("#answer_form_" + self.current_answer).hide()
-    $('#answer_errors_' + self.current_answer).html('')
-    $('.edit_answer_link').show()
+    answerForm(self.currentAnswer).hide()
+    answerErrors(self.currentAnswer).html('')
+    editLink(self.currentAnswer).show()
+
+  editLink = (answerId) ->
+    $('.edit-answer-link[data-answer-id="' + answerId + '"]')
+
+  answerForm = (answerId) ->
+    $("#edit-answer-" + answerId)
+
+  answerErrors = (answerId) ->
+    $('#answer-errors-' + answerId)
