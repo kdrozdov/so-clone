@@ -37,3 +37,4 @@ gem 'spring',        group: :development
 gem 'slim-rails'
 gem 'foundation-rails'
 gem 'devise'
+gem 'carrierwave'
