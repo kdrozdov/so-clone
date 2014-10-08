@@ -17,7 +17,7 @@ feature 'Add file', %q{
     fill_in 'Title', with: 'Question title'
     fill_in 'Body', with: 'Question body'
     attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
-    click_on 'Create'
+    click_on 'Save question'
 
     expect(page).to have_content 'spec_helper.rb'
   end

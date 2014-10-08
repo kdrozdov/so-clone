@@ -13,6 +13,7 @@ class QuestionsController <  ApplicationController
 
   def new
     @question = Question.new
+    @question.attachments.build
   end
 
   def create
@@ -22,6 +23,7 @@ class QuestionsController <  ApplicationController
       message = 'Your question successfully created.'
       redirect_to(@question, flash: { success: message })
     else
+      @question.attachments.build
       render :new
     end
   end
@@ -47,7 +49,7 @@ class QuestionsController <  ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, attachments_attributes: [:file])
   end
 
   def set_question
