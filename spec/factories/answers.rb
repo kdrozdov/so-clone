@@ -14,7 +14,7 @@
 
 FactoryGirl.define do
   factory :answer do
-    body 'MyText'
+    body 'AnswerBody'
     association :question
     association :author, factory: :user
   end

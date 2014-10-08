@@ -79,7 +79,7 @@ RSpec.describe AnswersController do
         request
         answer.reload
 
-        expect(answer.body).to eq 'MyText'
+        expect(answer.body).to eq 'AnswerBody'
       end
     end
 

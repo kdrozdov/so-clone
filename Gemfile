@@ -1,23 +1,24 @@
 source 'https://rubygems.org'
 gem 'rails', '4.1.6'
 
+group :development, :test do
+	gem 'rspec-rails'
+	gem 'factory_girl_rails'
+	gem 'capybara'
+	gem 'database_cleaner'
+	gem 'poltergeist'
+	gem 'launchy'
+end
+
 group :development do
 	gem 'rails_layout'
   gem 'rubocop'
   gem 'annotate'
 end
 
-group :development, :test do
-	gem 'rspec-rails'
-end
-
 group :test do
 	gem 'shoulda-matchers'
-	gem 'factory_girl_rails'
-	gem 'capybara'
-	gem 'poltergeist'
-	gem 'database_cleaner'
-	gem 'launchy'
+
 end
 
 group :production do

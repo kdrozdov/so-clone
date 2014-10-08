@@ -14,13 +14,13 @@ feature 'Editing answer', %q{
     sign_in answer.author
     visit question_path(question)
 
-    within "#answer-#{ answer.id }" do
+    within '.answers' do
       click_on 'Edit'
       fill_in 'Answer', with: 'Edited answer'
       click_on 'Save'
 
       expect(current_path).to eq question_path(question)
-      expect(page).to have_content answer.body
+      expect(page).not_to have_content 'AnswerBody'
       # save_screenshot('../screens/1.png')
       expect(page).to have_content 'Edited answer'
       expect(page).not_to have_selector 'textarea'

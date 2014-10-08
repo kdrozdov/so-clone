@@ -12,8 +12,8 @@
 
 FactoryGirl.define do
   factory :question do
-    title 'MyString'
-    body 'MyText'
+    title 'QuestionTitle'
+    body 'QuestionBody'
     association :author, factory: :user
   end
 
