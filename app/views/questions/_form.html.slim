@@ -3,18 +3,17 @@
     - @question.errors.full_messages.each do |message|
       li = message
 
-= form_for @question do |f|
+= nested_form_for @question do |f|
   p
     = f.label :title
     = f.text_field :title, class: "form-control"
   p
     = f.label :body
     = f.text_area :body, class: "form-control"
-  p Attachments:
-  p
-    = f.fields_for :attachments do |a|
-      = a.label :file
-      = a.file_field :file
-
+ 
+  p#attachments
+    = f.fields_for :attachments do |attachment_fields|
+      = render 'shared/attachment_fields', a: attachment_fields
+    = f.link_to_add "Add file", :attachments, class: 'button tiny'
 
   = f.submit "Save question", class: "button"

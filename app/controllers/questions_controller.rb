@@ -13,7 +13,6 @@ class QuestionsController <  ApplicationController
 
   def new
     @question = Question.new
-    @question.attachments.build
   end
 
   def create
@@ -23,7 +22,6 @@ class QuestionsController <  ApplicationController
       message = 'Your question successfully created.'
       redirect_to(@question, flash: { success: message })
     else
-      @question.attachments.build
       render :new
     end
   end
@@ -49,7 +47,7 @@ class QuestionsController <  ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body, attachments_attributes: [:file])
+    params.require(:question).permit(:title, :body, attachments_attributes: [:file, :id, :_destroy])
   end
 
   def set_question
@@ -57,7 +55,7 @@ class QuestionsController <  ApplicationController
   end
 
   def verify_authorship
-    unless current_user == @question.author
+    unless current_user.author_of?(@question)
       message = 'You do not have permission to perform this action.'
       redirect_to(@question, flash: { warning: message })
     end

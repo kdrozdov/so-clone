@@ -21,11 +21,11 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, attachments_attributes: [:file, :id, :_destroy])
   end
 
   def verify_authorship
-    return head :forbidden unless current_user == @answer.author
+    return head :forbidden unless current_user.author_of?(@answer)
   end
 
   def set_question

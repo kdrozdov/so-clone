@@ -1,27 +1,32 @@
 $ ->
   currentAnswer = 0;
+  currentAnswerContainer = null
 
   $(document).on 'click', '.edit-answer-link', (e) ->
     e.preventDefault()
-    if self.currentAnswer > 0 
-      answerForm(self.currentAnswer).hide()
-      answerErrors(self.currentAnswer).html('')
-      editLink(self.currentAnswer).show()
+    if self.currentAnswer > 0
+      answerForm(self.currentAnswerContainer).hide()
+      answerErrors(self.currentAnswerContainer).html('')
+      editLink(self.currentAnswerContainer).show()
     $(this).hide()
     self.currentAnswer = $(this).data('answerId')
-    answerForm(self.currentAnswer).show()
+    self.currentAnswerContainer = answerContainer(self.currentAnswer)
+    answerForm(self.currentAnswerContainer).show()
 
   $(document).on 'click', '.cancel-edit-link', (e) ->
     e.preventDefault()
-    answerForm(self.currentAnswer).hide()
-    answerErrors(self.currentAnswer).html('')
-    editLink(self.currentAnswer).show()
+    answerForm(self.currentAnswerContainer).hide()
+    answerErrors(self.currentAnswerContainer).html('')
+    editLink(self.currentAnswerContainer).show()
 
-  editLink = (answerId) ->
-    $('.edit-answer-link[data-answer-id="' + answerId + '"]')
+  answerContainer = (answerId) ->
+    $('div[data-answer="' + answerId + '"]')
 
-  answerForm = (answerId) ->
-    $("#edit-answer-" + answerId)
+  editLink = (container) ->
+    container.find('.edit-answer-link')
 
-  answerErrors = (answerId) ->
-    $('#answer-errors-' + answerId)
+  answerForm = (container) ->
+    container.find('.edit_answer')
+
+  answerErrors = (container) ->
+    container.find('.form-errors')

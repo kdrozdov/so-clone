@@ -1,0 +1,7 @@
+.row.collapse
+  .large-1.columns
+    = a.label :file
+  .large-8.columns
+    = a.file_field :file
+  .large-3.columns
+    = a.link_to_remove "Remove this file", class: 'button tiny right'

@@ -1,34 +1,32 @@
 
--if user_signed_in? && current_user?(@question.author)
-	= link_to "Edit question", edit_question_path
-	' &nbsp;
-	= link_to "Delete question", @question, method: :delete, data: { confirm: true }
-
 h2 = @question.title
+hr
+
+- if user_signed_in? && current_user?(@question.author)
+  ul.button-group.right
+    li = link_to "Edit question", edit_question_path, class: 'button tiny'
+    li = link_to "Delete question", @question, method: :delete, data: { confirm: true }, class: 'button alert tiny'
 
 p = @question.body
 
-p Attachments: 
-ul 
+
+- if @question.attachments.any?
+  p Attachments: 
+
+ul
   - @question.attachments.each do |a|
     li = link_to a.file.identifier, a.file.url
-
 br
 
 .answers
-	= render 'answers'
+  = render 'answers'
 
 - if user_signed_in?
-	= form_for [@question, @answer], remote:true do |f|
-		.form-errors
-		= f.label :body, 'Your answer'
-		= f.text_area :body
-
-		= f.submit "Create answer", class: "button"
+  = render 'answers/create_form', question: @question, answer: @answer
 - else
-	 p
-        ' You should
-        => link_to 'sign in', new_user_session_path
-        ' or
-        => link_to 'sign up', new_user_registration_path
-        ' to answer this question.
+   p
+    ' You should
+    => link_to 'sign in', new_user_session_path
+    ' or
+    => link_to 'sign up', new_user_registration_path
+    ' to answer this question.

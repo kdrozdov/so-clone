@@ -16,12 +16,13 @@ feature 'Editing answer', %q{
 
     within '.answers' do
       click_on 'Edit'
-      fill_in 'Answer', with: 'Edited answer'
+      fill_in 'Your answer', with: 'Edited answer'
+      
       click_on 'Save'
+      wait_for_ajax
 
       expect(current_path).to eq question_path(question)
-      expect(page).not_to have_content 'AnswerBody'
-      # save_screenshot('../screens/1.png')
+      expect(page).not_to have_content answer.body
       expect(page).to have_content 'Edited answer'
       expect(page).not_to have_selector 'textarea'
     end

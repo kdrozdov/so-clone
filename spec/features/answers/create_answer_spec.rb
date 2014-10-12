@@ -15,9 +15,9 @@ feature 'Create answer', %q{
 
     fill_in 'Your answer', with: 'My answer'
     click_on 'Create answer'
+    wait_for_ajax
 
     expect(current_path).to eq question_path(question)
-    # expect(page).to have_text("Your answer successfully created.")
     within '.answers' do
       expect(page).to have_text('My answer')
     end
@@ -28,6 +28,7 @@ feature 'Create answer', %q{
     visit question_path(question)
 
     click_on 'Create answer'
+    wait_for_ajax
 
     expect(page).to have_content "Body can't be blank"
   end

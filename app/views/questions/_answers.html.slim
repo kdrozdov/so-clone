@@ -1,17 +1,19 @@
 
 h2 = pluralize(@question.answers.count, "Answer")
+
 - @question.answers.each do |answer|
-  div id="answer-#{ answer.id }"
+  .answer.panel[data-answer="#{answer.id}"]
+
+    - if user_is_author_of?(answer)
+      ul.button-group.right
+        li = link_to 'Edit', '', data: {answer_id: answer.id }, class: 'button tiny edit-answer-link'
+        li = link_to 'Delete', question_answer_path(@question, answer), method: :delete, remote: true, data: { confirm: true }, class: 'button alert tiny delete-answer-link'
+    
     p = answer.body
-    - if user_signed_in? and current_user?(answer.author)
-      ul.button-group
-        li = link_to 'Delete', question_answer_path(@question, answer), class: 'button tiny', method: :delete, remote: true, data: { confirm: true }
-        li = link_to 'Edit', '', class: 'button tiny edit-answer-link', data: {answer_id: answer.id }
-      div id="answer-errors-#{answer.id}"
-      = form_for [@question, answer], remote: true,  html: { id: "edit-answer-#{answer.id}", class: "answer-edit-form" } do |f|
-        = f.label :body, 'Answer'
-        = f.text_area :body
-        ul.button-group
-        = f.submit 'Save', class: 'button tiny'
-        ' &nbsp; 
-        = link_to 'Cancel', '', class: 'button tiny cancel-edit-link'
+    
+    ul
+      - answer.attachments.each do |a|
+        li = link_to a.file.identifier, a.file.url
+
+    - if user_is_author_of?(answer)
+      = render 'answers/edit_form', question: @question, answer: answer
