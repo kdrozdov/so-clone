@@ -1,21 +1,35 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, only: [:create, :update, :destroy]
-  before_action :set_question, only: [:create, :update, :destroy]
-  before_action :set_answer, only: [:update, :destroy]
+  before_action :set_question, only: [:create]
+  before_action :set_answer, only: [:update, :destroy, :show]
   before_action :verify_authorship, only: [:update, :destroy]
 
   def create
     @answer = @question.answers.build(answer_params)
     @answer.author = current_user
     @answer.save
+
+    if @answer.save
+      render :show, status: :created
+    else
+      render json: @answer.errors.full_messages, status: :unprocessable_entity
+    end
   end
 
   def update
-    @answer.update(answer_params)
+    if @answer.update(answer_params)
+      render :show, status: :ok
+    else
+      render json: @answer.errors.full_messages, status: :unprocessable_entity
+    end
+  end
+
+  def show
   end
 
   def destroy
     @answer.destroy
+    head :no_content
   end
 
   private

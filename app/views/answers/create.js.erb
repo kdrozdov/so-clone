@@ -1,8 +1,0 @@
-<% if @answer.errors.present? %>
-	<% @answer.errors.full_messages.each do |message| %>
-		$('#new_answer').find('.form-errors').html('<div class="alert-box alert"><%= j message %></div>');
-	<% end %>
-<% else %>
-	$('.answers').html('<%= j render 'questions/answers' %>');
-	$('#new_answer').find('#answer_body').val('');
-<% end %>

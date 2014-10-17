@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class FileUploader < CarrierWave::Uploader::Base
-  delegate :identifier, to: :file   
+  delegate :identifier, to: :file
 
   storage :file
 

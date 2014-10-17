@@ -24,6 +24,6 @@ class User < ActiveRecord::Base
   has_many :questions, foreign_key: 'author_id', dependent: :destroy
 
   def author_of?(object)
-    return self == object.author
+    self == object.author
   end
 end

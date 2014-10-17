@@ -1,0 +1,17 @@
+form[id="edit_answer_{{id}}" class="edit_answer" method="post" data-remote="true" action="/answers/{{id}}" data-type="json" accept-charset="UTF-8" enctype="multipart/form-data"]
+  div[style="display:none"]
+    input[name="utf8" type="hidden" value="✓"]
+    input[name="_method" type="hidden" value="patch"]    
+  .form-errors
+  
+  p.form-field
+    label[for="answer_body"] Your answer
+    textarea[id="answer_body" name="answer[body]"] {{body}}
+
+  p.form-attachments
+    |{{> answers/_attachments }}
+    a[class="button tiny add_nested_fields" href="javascript:void(0)" data-blueprint-id="attachments_fields_blueprint" data-association="attachments"] Add file
+
+  input.button.tiny[type="submit" value="Save" name="commit"]
+  ' &nbsp;
+  a.button.tiny.cancel-edit-link Cancel

@@ -9,7 +9,7 @@ RSpec.describe AnswersController do
       post(:create,
            question_id: question,
            answer: attributes,
-           format: :js)
+           format: :json)
     end
     it_behaves_like 'AJAX inhospitable'
 
@@ -23,9 +23,9 @@ RSpec.describe AnswersController do
         expect(assigns(:answer).author).to eq @user
       end
 
-      it 'render create template' do
+      it 'have response status 201' do
         request
-        expect(response).to render_template :create
+        expect(response.status).to eq 201
       end
     end
 
@@ -36,9 +36,9 @@ RSpec.describe AnswersController do
         expect { request }.to_not change(Answer, :count)
       end
 
-      it 'render create template' do
+      it 'have response status 422' do
         request
-        expect(response).to render_template :create
+        expect(response.status).to eq 422
       end
     end
   end
@@ -47,9 +47,8 @@ RSpec.describe AnswersController do
     let(:request) do
       patch(:update,
             id: answer,
-            question_id: answer.question,
             answer: attributes,
-            format: :js)
+            format: :json)
     end
     it_behaves_like 'AJAX inhospitable'
     it_behaves_like 'AJAX owner verifier'
@@ -64,13 +63,18 @@ RSpec.describe AnswersController do
       it 'changes answer attributes' do
         patch(:update,
               id: answer,
-              question_id: answer.question,
               answer: { body: 'new body' },
-              format: :js)
+              format: :json)
         answer.reload
 
         expect(answer.body).to eq 'new body'
       end
+
+      it 'responses with 200 status' do
+        request
+        expect(response.status).to eq 200
+      end
+
     end
 
     context 'with invalid attributes' do
@@ -81,11 +85,11 @@ RSpec.describe AnswersController do
 
         expect(answer.body).to eq 'AnswerBody'
       end
-    end
 
-    it 'renders update template' do
-      request
-      expect(response).to render_template :update
+      it 'responses with 422 status' do
+        request
+        expect(response.status).to eq 422
+      end
     end
   end
 
@@ -94,7 +98,7 @@ RSpec.describe AnswersController do
       delete(:destroy,
              id: answer,
              question_id: answer.question,
-             format: :js)
+             format: :json)
     end
     it_behaves_like 'AJAX inhospitable'
     it_behaves_like 'AJAX owner verifier'
@@ -103,9 +107,9 @@ RSpec.describe AnswersController do
       expect { request }.to change(@question.answers, :count).by(-1)
     end
 
-    it 'renders destroy template' do
+   it 'responses with 204 status' do
       request
-      expect(response).to render_template :destroy
+      expect(response.status).to eq 204
     end
   end
 end

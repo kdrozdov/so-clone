@@ -1,19 +1,13 @@
-
-h2 = pluralize(@question.answers.count, "Answer")
-
 - @question.answers.each do |answer|
   .answer.panel[data-answer="#{answer.id}"]
 
     - if user_is_author_of?(answer)
       ul.button-group.right
-        li = link_to 'Edit', '', data: {answer_id: answer.id }, class: 'button tiny edit-answer-link'
-        li = link_to 'Delete', question_answer_path(@question, answer), method: :delete, remote: true, data: { confirm: true }, class: 'button alert tiny delete-answer-link'
+        li = link_to 'Edit', answer, remote: true, class: 'button tiny edit-answer-link'
+        li = link_to 'Delete', answer, method: :delete, remote: true, data: { confirm: "Are you sure?" }, class: 'button alert tiny delete-answer-link'
     
-    p = answer.body
+    p.answer-body = answer.body
     
-    ul
+    ul.attachments
       - answer.attachments.each do |a|
         li = link_to a.file.identifier, a.file.url
-
-    - if user_is_author_of?(answer)
-      = render 'answers/edit_form', question: @question, answer: answer

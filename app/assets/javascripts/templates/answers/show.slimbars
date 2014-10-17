@@ -1,0 +1,16 @@
+ul.button-group.right
+  li 
+    a.button.tiny.edit-answer-link[href="/answers/{{id}}" data-remote="true"] Edit
+  li
+    a.button.alert.tiny.delete-answer-link[href="/answers/{{id}}" rel="nofollow" data-remote="true" data-method="delete" data-confirm="Are you sure?"] Delete
+
+p.answer-body
+  |{{body}}
+
+|{{#if attachments.length}}
+ul.attachments
+  |{{#each attachments}}
+  li 
+    a[href="{{file_url}}"] {{filename}}
+  |{{/each}}
+|{{/if}}

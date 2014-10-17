@@ -1,0 +1,10 @@
+
+|{{#each attachments}}
+.fields.row.collapse
+  .large-2.columns
+    a[href="{{file_url}}"] {{filename}}
+  .large-10.columns
+    input[id="answer_attachments_attributes_{{@index}}__destroy" name="answer[attachments_attributes][{{@index}}][_destroy]" value="false" type="hidden"]
+    a[class="button tiny alert right remove_nested_fields" data-association="attachments" href="javascript:void(0)"]Remove this file
+  input[id="answer_attachments_attributes_{{@index}}_id" name="answer[attachments_attributes][{{@index}}][id]" value="{{id}}" type="hidden"]
+|{{/each}}

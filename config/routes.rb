@@ -1,9 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users
-  resources :questions do
+  resources :questions, shallow: true do
     resources :answers
   end
-  post 'answers' => 'answers#create'
 
   root 'questions#index'
   # The priority is based upon order of creation: first created -> highest priority.
