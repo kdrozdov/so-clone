@@ -23,9 +23,9 @@ RSpec.describe AnswersController do
         expect(assigns(:answer).author).to eq @user
       end
 
-      it 'have response status 201' do
+      it 'have response status 200' do
         request
-        expect(response.status).to eq 201
+        expect(response.status).to eq 200
       end
     end
 

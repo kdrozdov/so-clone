@@ -4,6 +4,6 @@ module UsersHelper
   end
 
   def user_is_author_of?(object)
-    user_signed_in? and current_user == object.author
+    user_signed_in? && current_user == object.author
   end
 end

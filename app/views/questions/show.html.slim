@@ -1,4 +1,3 @@
-
 h2 = @question.title
 hr
 
@@ -19,7 +18,7 @@ ul
 br
 
 h2.answers-title = pluralize(@question.answers.count, "Answer")
-.answers
+.answers data={ question_id: @question.id }
   = render 'answers'
 
 - if user_signed_in?
@@ -31,3 +30,5 @@ h2.answers-title = pluralize(@question.answers.count, "Answer")
     ' or
     => link_to 'sign up', new_user_registration_path
     ' to answer this question.
+
+= subscribe_to "/questions/#{@question.id}/answers"

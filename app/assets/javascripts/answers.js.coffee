@@ -10,6 +10,7 @@ class Answer
 
     this.binds()
     this.setAjaxHooks()
+    this.setEventHandlers()
 
   updateTotalCount: () =>
     count = $('.answer').length
@@ -20,7 +21,6 @@ class Answer
   render: (container, data) ->
     @el.html(HandlebarsTemplates['answers/show'](data))
     $(container).prepend(@el)
-    this.updateTotalCount()
 
   binds: () ->
     self = this
@@ -33,25 +33,48 @@ class Answer
   setAjaxHooks: () ->
     self = this
 
-    @el.on 'ajax:success', @deleteLink, (event, data, status, xhr) ->
-      self.el.remove()
-      self.updateTotalCount()
-
     @el.on 'ajax:success', @editLink, (e, data, status, xhr) ->
       self.el.find(self.editLink).hide()
       self.el.append(HandlebarsTemplates['answers/form'](data))
-
-    @el.on 'ajax:success', @form, (e, data, status, xhr) ->
-      self.el.html(HandlebarsTemplates['answers/show'](data))
 
     @el.on 'ajax:error', @form, (e, xhr, status) ->
       formErrorsEl = self.el.find(self.formErrors)
       formErrorsEl.html(HandlebarsTemplates['answers/errors']({ errors: xhr.responseJSON }))
 
+  setEventHandlers: () ->
+    self = this
+
+    @el.on 'answer:create', (e, data) ->
+      self.render('.answers', data)
+      self.updateTotalCount()
+
+    @el.on 'answer:update', (e, data) ->
+      self.el.html(HandlebarsTemplates['answers/show'](data))
+
+    @el.on 'answer:destroy', (e) ->
+      self.el.remove()
+      self.updateTotalCount()
+
 $ ->
+
+  questionId = $('.answers').data('questionId')
+
+  PrivatePub.subscribe "/questions/#{questionId}/answers", (data, channel) ->
+    if data.action is 'create'
+      answerJSON = $.parseJSON(data['answer'])
+      answerEl = createAnswerEl(answerJSON.id)
+      answer = new Answer(answerEl)
+      answerEl.trigger('answer:create', answerJSON)
+    else if data.action is 'update'
+      answerJSON = $.parseJSON(data['answer'])
+      answerEl = getAnswerEl(answerJSON.id)
+      answerEl.trigger('answer:update', answerJSON)
+    else if data.action is 'destroy'
+      answerId = data.answer_id
+      answerEl = getAnswerEl(answerId)
+      answerEl.trigger('answer:destroy')
+
   $('form.new_answer').on 'ajax:success', (e, data, status, xhr) ->
-    answer = new Answer(createAnswerEl(data.id))
-    answer.render('.answers', data)
     clearForm($('form.new_answer'))
   .on 'ajax:error', (e, xhr, status, error) ->
     formErrorsEl = $('form.new_answer').find('.form-errors')
@@ -59,6 +82,9 @@ $ ->
 
   $('.answers .answer').each((i, e) ->
     answer = new Answer($(e)))
+
+  getAnswerEl  = (id) ->
+    $('.answer[data-answer="' + id + '"]')
 
   createAnswerEl = (id) ->
     $('<div></div>').attr({class: 'answer panel', 'data-answer': id});

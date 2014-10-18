@@ -7,6 +7,7 @@ html lang="en"
     title == content_for?(:title) ? yield(:title) : "Stackoverflow(clone)"
 
     = stylesheet_link_tag "application"
+    = javascript_include_tag "application"
     = javascript_include_tag "vendor/modernizr"
     = csrf_meta_tag
 
@@ -19,4 +20,4 @@ html lang="en"
             = render 'layouts/alerts'
             == yield
 
-    = javascript_include_tag "application"
+    

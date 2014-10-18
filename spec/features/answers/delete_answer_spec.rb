@@ -18,6 +18,7 @@ feature 'Delete answer', %q{
       click_on 'Delete'
       wait_for_ajax
       
+      sleep(0.2)
       expect(current_path).to eq question_path(question)
       expect(page).not_to have_content answer.body
       expect(page).not_to have_selector "#answer-#{answer.id}"

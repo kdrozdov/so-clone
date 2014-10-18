@@ -4,13 +4,18 @@ class AnswersController < ApplicationController
   before_action :set_answer, only: [:update, :destroy, :show]
   before_action :verify_authorship, only: [:update, :destroy]
 
+  def show
+  end
+
   def create
     @answer = @question.answers.build(answer_params)
     @answer.author = current_user
     @answer.save
 
     if @answer.save
-      render :show, status: :created
+      PrivatePub.publish_to("/questions/#{@question.id}/answers",
+                            answer: (render template: 'answers/show.json.jbuilder'),
+                            action: 'create')
     else
       render json: @answer.errors.full_messages, status: :unprocessable_entity
     end
@@ -18,16 +23,18 @@ class AnswersController < ApplicationController
 
   def update
     if @answer.update(answer_params)
-      render :show, status: :ok
+      PrivatePub.publish_to("/questions/#{@answer.question.id}/answers",
+                            answer: (render template: 'answers/show.json.jbuilder'),
+                            action: 'update')
     else
       render json: @answer.errors.full_messages, status: :unprocessable_entity
     end
   end
 
-  def show
-  end
-
   def destroy
+    PrivatePub.publish_to("/questions/#{@answer.question.id}/answers",
+                          answer_id: @answer.id,
+                          action: 'destroy')
     @answer.destroy
     head :no_content
   end
