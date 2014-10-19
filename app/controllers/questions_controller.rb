@@ -20,6 +20,9 @@ class QuestionsController <  ApplicationController
 
     if @question.save
       message = 'Your question successfully created.'
+      PrivatePub.publish_to("/questions",
+                            question: @question.to_json,
+                            action: 'create')
       redirect_to(@question, flash: { success: message })
     else
       render :new
@@ -31,6 +34,9 @@ class QuestionsController <  ApplicationController
 
   def update
     if @question.update(question_params)
+      PrivatePub.publish_to("/questions",
+                      question: @question.to_json,
+                      action: 'update')
       redirect_to @question
     else
       render :edit
@@ -38,7 +44,11 @@ class QuestionsController <  ApplicationController
   end
 
   def destroy
+    @id = @question.id
     if @question.destroy
+      PrivatePub.publish_to("/questions",
+                question_id: @id,
+                action: 'destroy')
       flash[:success] = 'Your question successfully deleted.'
     end
     redirect_to root_path

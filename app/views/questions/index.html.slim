@@ -1,7 +1,9 @@
 
 h2 Questions
 
-ul
+ul.questions
 	- @questions.each do |question|
-		li
+		li.question data={ question: question.id }
 			= link_to question.title, question
+
+= subscribe_to "/questions"

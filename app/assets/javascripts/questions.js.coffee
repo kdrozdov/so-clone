@@ -1,33 +1,22 @@
-# $ ->
-  
-  # currentAnswer = 0;
-  # currentAnswerContainer = null
+$ ->
+  PrivatePub.subscribe "/questions", (data, channel) ->
+    if data.action is 'create'
+      questionJSON = $.parseJSON(data['question'])
+      questionEl = createQuestionEl(questionJSON.id)
+      questionEl.html(HandlebarsTemplates['questions/show'](questionJSON))
+      $('.questions').append(questionEl)
+    else if data.action is 'update'
+      console.log(data)
+      questionJSON = $.parseJSON(data['question'])
+      questionEl = getQuestionEl(questionJSON.id)
+      questionEl.html(HandlebarsTemplates['questions/show'](questionJSON))
+    else if data.action is 'destroy'
+      questionId = data.question_id
+      questionEl = getQuestionEl(questionId)
+      questionEl.remove()
 
-  # $(document).on 'click', '.edit-answer-link', (e) ->
-  #   e.preventDefault()
-  #   if self.currentAnswer > 0
-  #     answerForm(self.currentAnswerContainer).hide()
-  #     answerErrors(self.currentAnswerContainer).html('')
-  #     editLink(self.currentAnswerContainer).show()
-  #   $(this).hide()
-  #   self.currentAnswer = $(this).data('answerId')
-  #   self.currentAnswerContainer = answerContainer(self.currentAnswer)
-  #   answerForm(self.currentAnswerContainer).show()
+  createQuestionEl = (id) ->
+    $('<li></li>').attr({class: 'answer panel', 'data-question': id});
 
-  # $(document).on 'click', '.cancel-edit-link', (e) ->
-  #   e.preventDefault()
-  #   answerForm(self.currentAnswerContainer).hide()
-  #   answerErrors(self.currentAnswerContainer).html('')
-  #   editLink(self.currentAnswerContainer).show()
-
-  # answerContainer = (answerId) ->
-  #   $('div[data-answer="' + answerId + '"]')
-
-  # editLink = (container) ->
-  #   container.find('.edit-answer-link')
-
-  # answerForm = (container) ->
-  #   container.find('.edit_answer')
-
-  # answerErrors = (container) ->
-  #   container.find('.form-errors')
+  getQuestionEl = (id) ->
+    $('.question[data-question="' + id + '"]')
