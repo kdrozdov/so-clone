@@ -1,0 +1,13 @@
+.answer.panel data={ answer: answer.id }
+
+  - if user_is_author_of?(answer)
+    ul.button-group.right
+      li = link_to 'Edit', answer, remote: true, data: { type: :json }, class: 'button tiny edit-answer-link'
+      li = link_to 'Delete', answer, method: :delete, remote: true, data: { type: :json, confirm: "Are you sure?" }, class: 'button alert tiny delete-answer-link'
+  
+  p.answer-body = answer.body
+  
+  - if answer.attachments.any?
+    ul.attachments
+      - answer.attachments.each do |a|
+        li = link_to a.file.identifier, a.file.url

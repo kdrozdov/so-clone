@@ -11,7 +11,7 @@ html lang="en"
     = javascript_include_tag "vendor/modernizr"
     = csrf_meta_tag
 
-  body
+  body data={ user_id: "#{current_user.id if user_signed_in?}" }
 
     = render 'layouts/header'
     

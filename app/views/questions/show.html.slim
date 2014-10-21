@@ -19,7 +19,7 @@ br
 
 h2.answers-title = pluralize(@question.answers.count, "Answer")
 .answers data={ question_id: @question.id }
-  = render 'answers'
+  = render @question.answers
 
 - if user_signed_in?
   = render 'answers/form', question: @question, answer: @answer

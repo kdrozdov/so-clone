@@ -19,6 +19,7 @@ class Answer
     $(@answersTitle).html("#{count} #{str}")
       
   render: (container, data) ->
+    data.user_id = $('body').data('userId')
     @el.html(HandlebarsTemplates['answers/show'](data))
     $(container).prepend(@el)
 
@@ -49,6 +50,7 @@ class Answer
       self.updateTotalCount()
 
     @el.on 'answer:update', (e, data) ->
+      data.user_id = $('body').data('userId')
       self.el.html(HandlebarsTemplates['answers/show'](data))
 
     @el.on 'answer:destroy', (e) ->
