@@ -153,9 +153,9 @@ RSpec.describe QuestionsController do
       expect { request }.to change(@user.questions, :count).by(-1)
     end
 
-    it 'redirects to root path' do
+    it 'redirects to index view' do
       request
-      expect(response).to redirect_to root_path
+      expect(response).to redirect_to questions_path
     end
   end
 end

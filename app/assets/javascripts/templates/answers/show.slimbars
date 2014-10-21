@@ -1,8 +1,8 @@
 ul.button-group.right
   li 
-    a.button.tiny.edit-answer-link[href="/answers/{{id}}" data-remote="true"] Edit
+    a.button.tiny.edit-answer-link[href="/answers/{{id}}" data-remote="true" data-type="json"] Edit
   li
-    a.button.alert.tiny.delete-answer-link[href="/answers/{{id}}" rel="nofollow" data-remote="true" data-method="delete" data-confirm="Are you sure?"] Delete
+    a.button.alert.tiny.delete-answer-link[href="/answers/{{id}}" rel="nofollow" data-remote="true" data-type="json" data-method="delete" data-confirm="Are you sure?"] Delete
 
 p.answer-body
   |{{body}}

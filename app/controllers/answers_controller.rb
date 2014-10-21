@@ -1,45 +1,50 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, only: [:create, :update, :destroy]
-  before_action :set_question, only: [:create]
-  before_action :set_answer, only: [:update, :destroy, :show]
+  before_action :create_answer, only: [:create]
+  before_action :set_answer, only: [:show, :update, :destroy]
   before_action :verify_authorship, only: [:update, :destroy]
+  after_action :publish_answer, only: [:create, :update, :destroy]
+
+  respond_to :json
 
   def show
+    respond_with(@answer) 
   end
 
   def create
-    @answer = @question.answers.build(answer_params)
-    @answer.author = current_user
-    @answer.save
-
-    if @answer.save
-      PrivatePub.publish_to("/questions/#{@question.id}/answers",
-                            answer: (render template: 'answers/show.json.jbuilder'),
-                            action: 'create')
-    else
-      render json: @answer.errors.full_messages, status: :unprocessable_entity
-    end
+    respond_with(@answer)    
   end
 
   def update
-    if @answer.update(answer_params)
-      PrivatePub.publish_to("/questions/#{@answer.question.id}/answers",
-                            answer: (render template: 'answers/show.json.jbuilder'),
-                            action: 'update')
-    else
-      render json: @answer.errors.full_messages, status: :unprocessable_entity
-    end
+    @answer.update(answer_params)
+    respond_with(@answer)
   end
 
   def destroy
-    PrivatePub.publish_to("/questions/#{@answer.question.id}/answers",
-                          answer_id: @answer.id,
-                          action: 'destroy')
-    @answer.destroy
-    head :no_content
+    respond_with(@answer.destroy)
   end
 
   private
+
+  def publish_answer
+    case action_name
+    when 'destroy'
+      PrivatePub.publish_to("/questions/#{@answer.question.id}/answers",
+                            answer_id: @answer.id,
+                            action: action_name)
+    else
+      PrivatePub.publish_to("/questions/#{@answer.question.id}/answers",
+                            answer: AnswerSerializer.new(@answer, root: false).to_json,
+                            action: action_name) if @answer.valid?
+    end
+  end
+
+  def create_answer
+    @question = Question.find(params[:question_id])
+    @answer = @question.answers.build(answer_params)
+    @answer.author = current_user
+    @answer.save
+  end
 
   def answer_params
     params.require(:answer).permit(:body, attachments_attributes: [:file, :id, :_destroy])
@@ -47,10 +52,6 @@ class AnswersController < ApplicationController
 
   def verify_authorship
     return head :forbidden unless current_user.author_of?(@answer)
-  end
-
-  def set_question
-    @question = Question.find(params[:question_id])
   end
 
   def set_answer

@@ -35,7 +35,7 @@ class Answer
 
     @el.on 'ajax:success', @editLink, (e, data, status, xhr) ->
       self.el.find(self.editLink).hide()
-      self.el.append(HandlebarsTemplates['answers/form'](data))
+      self.el.append(HandlebarsTemplates['answers/form'](data.answer))
 
     @el.on 'ajax:error', @form, (e, xhr, status) ->
       formErrorsEl = self.el.find(self.formErrors)
@@ -76,9 +76,9 @@ $ ->
 
   $('form.new_answer').on 'ajax:success', (e, data, status, xhr) ->
     clearForm($('form.new_answer'))
-  .on 'ajax:error', (e, xhr, status, error) ->
+  .on 'ajax:error', (e, xhr, status) ->
     formErrorsEl = $('form.new_answer').find('.form-errors')
-    formErrorsEl.html(HandlebarsTemplates['answers/errors']({ errors: xhr.responseJSON }))
+    formErrorsEl.html(HandlebarsTemplates['answers/errors']({ errors: xhr.responseJSON.errors }))
 
   $('.answers .answer').each((i, e) ->
     answer = new Answer($(e)))

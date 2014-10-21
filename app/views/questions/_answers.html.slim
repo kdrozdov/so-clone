@@ -3,8 +3,8 @@
 
     - if user_is_author_of?(answer)
       ul.button-group.right
-        li = link_to 'Edit', answer, remote: true, class: 'button tiny edit-answer-link'
-        li = link_to 'Delete', answer, method: :delete, remote: true, data: { confirm: "Are you sure?" }, class: 'button alert tiny delete-answer-link'
+        li = link_to 'Edit', answer, remote: true, data: { type: :json }, class: 'button tiny edit-answer-link'
+        li = link_to 'Delete', answer, method: :delete, remote: true, data: { type: :json, confirm: "Are you sure?" }, class: 'button alert tiny delete-answer-link'
     
     p.answer-body = answer.body
     

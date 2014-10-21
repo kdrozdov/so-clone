@@ -2,56 +2,37 @@ class QuestionsController <  ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_question, only: [:show, :edit, :update, :destroy]
   before_action :verify_authorship, only: [:edit, :update, :destroy]
+  before_action :set_answer, only: [:show]
+  after_action :publish_question, only: [:create, :update, :destroy]
+
+  respond_to :html
 
   def index
-    @questions = Question.all
+    respond_with(@questions = Question.all)
   end
 
   def show
-    @answer = Answer.new
+    respond_with(@question)
   end
 
   def new
-    @question = Question.new
+    respond_with(@question = Question.new)
   end
 
   def create
-    @question = current_user.questions.new(question_params)
-
-    if @question.save
-      message = 'Your question successfully created.'
-      PrivatePub.publish_to("/questions",
-                            question: @question.to_json,
-                            action: 'create')
-      redirect_to(@question, flash: { success: message })
-    else
-      render :new
-    end
+    respond_with(@question = current_user.questions.create(question_params))
   end
 
   def edit
   end
 
   def update
-    if @question.update(question_params)
-      PrivatePub.publish_to("/questions",
-                      question: @question.to_json,
-                      action: 'update')
-      redirect_to @question
-    else
-      render :edit
-    end
+    @question.update(question_params)
+    respond_with(@question)
   end
 
   def destroy
-    @id = @question.id
-    if @question.destroy
-      PrivatePub.publish_to("/questions",
-                question_id: @id,
-                action: 'destroy')
-      flash[:success] = 'Your question successfully deleted.'
-    end
-    redirect_to root_path
+    respond_with(@question.destroy)
   end
 
   private
@@ -60,8 +41,25 @@ class QuestionsController <  ApplicationController
     params.require(:question).permit(:title, :body, attachments_attributes: [:file, :id, :_destroy])
   end
 
+  def publish_question
+    case action_name
+    when 'destroy'
+      PrivatePub.publish_to('/questions',
+                            question_id: @question.id,
+                            action: action_name)
+    else
+      PrivatePub.publish_to('/questions',
+                            question: @question.to_json,
+                            action: action_name) if @question.valid?
+    end
+  end
+
   def set_question
     @question = Question.find(params[:id])
+  end
+
+  def set_answer
+    @answer = Answer.new
   end
 
   def verify_authorship

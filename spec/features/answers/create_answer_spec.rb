@@ -30,7 +30,7 @@ feature 'Create answer', %q{
     click_on 'Create answer'
     wait_for_ajax
 
-    expect(page).to have_content "Body can't be blank"
+    expect(page).to have_content "body can't be blank"
   end
 
   scenario 'Non-authenticated user tried to create answer' do
