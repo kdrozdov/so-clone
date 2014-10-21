@@ -15,6 +15,7 @@ class Question < ActiveRecord::Base
 
   has_many :answers, -> { order 'created_at DESC' }, dependent: :destroy
   has_many :attachments, as: :attachmentable, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
 
   validates :body, presence: true
   validates :title, presence: true, length: { maximum: 255 }
