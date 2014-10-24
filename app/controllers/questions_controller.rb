@@ -37,10 +37,6 @@ class QuestionsController <  ApplicationController
 
   private
 
-  def question_params
-    params.require(:question).permit(:title, :body, attachments_attributes: [:file, :id, :_destroy])
-  end
-
   def publish_question
     case action_name
     when 'destroy'
@@ -52,6 +48,10 @@ class QuestionsController <  ApplicationController
                             question: @question.to_json,
                             action: action_name) if @question.valid?
     end
+  end
+
+  def question_params
+    params.require(:question).permit(:title, :body, attachments_attributes: [:file, :id, :_destroy])
   end
 
   def set_question

@@ -1,0 +1,6 @@
+ul.alert-box.alert
+  |{{#each errors}}
+  li
+    |{{@key}}&nbsp;
+    |{{this}}
+  |{{/each}}

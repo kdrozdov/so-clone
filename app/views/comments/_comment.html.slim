@@ -1,0 +1,8 @@
+.comment data={ comment: comment.id }
+
+  - if user_is_author_of?(comment)
+    ul.button-group.right
+      li = link_to 'Edit', comment, remote: true, data: { type: :json }, class: 'button tiny edit-comment'
+      li = link_to 'Delete', comment, method: :delete, remote: true, data: { type: :json, confirm: "Are you sure?" }, class: 'button alert tiny delete-comment'
+  
+  p.comment-body = comment.body

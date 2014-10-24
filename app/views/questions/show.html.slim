@@ -1,20 +1,25 @@
-h2 = @question.title
-hr
+.question
+  h2 = @question.title
+  hr
 
-- if user_signed_in? && current_user?(@question.author)
-  ul.button-group.right
-    li = link_to "Edit question", edit_question_path, class: 'button tiny'
-    li = link_to "Delete question", @question, method: :delete, data: { confirm: true }, class: 'button alert tiny'
+  - if user_is_author_of?(@question)
+    ul.button-group.right
+      li = link_to "Edit question", edit_question_path, class: 'button tiny'
+      li = link_to "Delete question", @question, method: :delete, data: { confirm: true }, class: 'button alert tiny'
 
-p = @question.body
+  p = @question.body
 
+  - if @question.attachments.any?
+    p Attachments: 
+    ul
+      - @question.attachments.each do |a|
+        li = link_to a.file.identifier, a.file.url
 
-- if @question.attachments.any?
-  p Attachments: 
+  .comments
+    = render @question.comments
+    - if user_signed_in?
+      = link_to 'Add a comment', '', class: 'button tiny add-comment'
 
-ul
-  - @question.attachments.each do |a|
-    li = link_to a.file.identifier, a.file.url
 br
 
 h2.answers-title = pluralize(@question.answers.count, "Answer")
@@ -31,4 +36,4 @@ h2.answers-title = pluralize(@question.answers.count, "Answer")
     => link_to 'sign up', new_user_registration_path
     ' to answer this question.
 
-= subscribe_to "/questions/#{@question.id}/answers"
+= subscribe_to "/questions/#{@question.id}"

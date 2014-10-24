@@ -1,5 +1,7 @@
-class Answer
+class @Answer
   constructor: (@el) ->
+    @id = @el.data('answer')
+    @commentsEl = @el.find('.comments')
     @answerBody = '.answer-body'
     @cancelEditLink = '.cancel-edit-link'
     @editLink = '.edit-answer-link'
@@ -7,10 +9,12 @@ class Answer
     @form = 'form.edit_answer'
     @formErrors = '.form-errors'
     @answersTitle = '.answers-title'
+    @addComment = '.add-comment'
+    @cancelComment = '.cancel-comment'
+    @newCommentForm = 'form.new_comment'
 
     this.binds()
     this.setAjaxHooks()
-    this.setEventHandlers()
 
   updateTotalCount: () =>
     count = $('.answer').length
@@ -26,24 +30,20 @@ class Answer
   binds: () ->
     self = this
 
+    @commentsEl.on 'click', @addComment, (e) ->
+      e.preventDefault()
+      self.commentsEl.find(self.addComment).hide()
+      self.commentsEl.append(HandlebarsTemplates['comments/new_form']({ id: self.id, parent: 'answer' }))
+
+    @commentsEl.on 'click', @cancelComment, (e) ->
+      e.preventDefault()
+      self.commentsEl.find(self.addComment).show()
+      self.commentsEl.find(self.newCommentForm).remove()
+
     @el.on 'click', @cancelEditLink, (e) ->
       e.preventDefault()
       self.el.find(self.editLink).show()
       self.el.find(self.form).remove()
-
-  setAjaxHooks: () ->
-    self = this
-
-    @el.on 'ajax:success', @editLink, (e, data, status, xhr) ->
-      self.el.find(self.editLink).hide()
-      self.el.append(HandlebarsTemplates['answers/form'](data.answer))
-
-    @el.on 'ajax:error', @form, (e, xhr, status) ->
-      formErrorsEl = self.el.find(self.formErrors)
-      formErrorsEl.html(HandlebarsTemplates['answers/errors']({ errors: xhr.responseJSON }))
-
-  setEventHandlers: () ->
-    self = this
 
     @el.on 'answer:create', (e, data) ->
       self.render('.answers', data)
@@ -57,41 +57,21 @@ class Answer
       self.el.remove()
       self.updateTotalCount()
 
-$ ->
+  setAjaxHooks: () ->
+    self = this
 
-  questionId = $('.answers').data('questionId')
+    @commentsEl.on 'ajax:success', @newCommentForm, (e, data, status, xhr) ->
+      self.commentsEl.find(self.addComment).show()
+      self.commentsEl.find(self.newCommentForm).remove()
 
-  PrivatePub.subscribe "/questions/#{questionId}/answers", (data, channel) ->
-    if data.action is 'create'
-      answerJSON = $.parseJSON(data['answer'])
-      answerEl = createAnswerEl(answerJSON.id)
-      answer = new Answer(answerEl)
-      answerEl.trigger('answer:create', answerJSON)
-    else if data.action is 'update'
-      answerJSON = $.parseJSON(data['answer'])
-      answerEl = getAnswerEl(answerJSON.id)
-      answerEl.trigger('answer:update', answerJSON)
-    else if data.action is 'destroy'
-      answerId = data.answer_id
-      answerEl = getAnswerEl(answerId)
-      answerEl.trigger('answer:destroy')
+    @commentsEl.on 'ajax:error', @newCommentForm, (e, xhr, status) ->
+      formErrorsEl = self.commentsEl.find(self.formErrors)
+      formErrorsEl.html(HandlebarsTemplates['shared/form_errors']({ errors: xhr.responseJSON.errors }))
 
-  $('form.new_answer').on 'ajax:success', (e, data, status, xhr) ->
-    clearForm($('form.new_answer'))
-  .on 'ajax:error', (e, xhr, status) ->
-    formErrorsEl = $('form.new_answer').find('.form-errors')
-    formErrorsEl.html(HandlebarsTemplates['answers/errors']({ errors: xhr.responseJSON.errors }))
+    @el.on 'ajax:success', @editLink, (e, data, status, xhr) ->
+      self.el.find(self.editLink).hide()
+      self.el.append(HandlebarsTemplates['answers/form'](data.answer))
 
-  $('.answers .answer').each((i, e) ->
-    answer = new Answer($(e)))
-
-  getAnswerEl  = (id) ->
-    $('.answer[data-answer="' + id + '"]')
-
-  createAnswerEl = (id) ->
-    $('<div></div>').attr({class: 'answer panel', 'data-answer': id});
-
-  clearForm = (form) ->
-    form.find('.form-errors').html('')
-    form.find('.form-attachments').find('.fields').remove()
-    form.find('textarea').val('')
+    @el.on 'ajax:error', @form, (e, xhr, status) ->
+      formErrorsEl = self.el.find(self.formErrors)
+      formErrorsEl.html(HandlebarsTemplates['answers/errors']({ errors: xhr.responseJSON }))    

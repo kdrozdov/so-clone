@@ -8,6 +8,7 @@
 #  commentable_type :string(255)
 #  created_at       :datetime
 #  updated_at       :datetime
+#  author_id        :integer          not null
 #
 
 require 'rails_helper'

@@ -1,0 +1,12 @@
+form[id="new_comment" class="new_comment" method="post" data-remote="true" action="/{{parent}}s/{{id}}/comments" data-type="json" accept-charset="UTF-8" enctype="multipart/form-data"]
+  div[style="display:none"]
+    input[name="utf8" type="hidden" value="✓"]
+  .form-errors
+  
+  p.form-field
+    label[for="comment_body"] Comment
+    textarea[id="comment_body" name="comment[body]"]
+
+  input.button.tiny[type="submit" value="Save" name="commit"]
+  ' &nbsp;
+  a.button.tiny.cancel-comment Cancel

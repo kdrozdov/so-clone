@@ -1,0 +1,13 @@
+form[id="edit_comment_{{id}}" class="edit_comment" method="post" data-remote="true" action="/comments/{{id}}" data-type="json" accept-charset="UTF-8" enctype="multipart/form-data"]
+  div[style="display:none"]
+    input[name="utf8" type="hidden" value="✓"]
+    input[name="_method" type="hidden" value="patch"]    
+  .form-errors
+  
+  p.form-field
+    label[for="comment_body"] Comment
+    textarea[id="comment_body" name="comment[body]"] {{body}}
+
+  input.button.tiny[type="submit" value="Save" name="commit"]
+  ' &nbsp;
+  a.button.tiny.cancel-edit Cancel

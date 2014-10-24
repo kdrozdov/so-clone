@@ -18,7 +18,7 @@
 //= require handlebars.runtime
 //= require_tree ./templates
 //= require foundation
-// require turbolinks
 //= require_tree .
+//= require stackoverflow
 
 $(function(){ $(document).foundation(); });
