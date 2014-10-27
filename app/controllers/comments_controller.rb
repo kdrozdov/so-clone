@@ -27,24 +27,18 @@ class CommentsController < ApplicationController
   private
 
   def publish_comment
-    question_id = @comment.commentable.id if @comment.commentable.instance_of? Question
-    question_id ||= @comment.commentable.question.id
+    if @comment.valid?
+      question_id = @comment.commentable.id if @comment.commentable.instance_of? Question
+      question_id ||= @comment.commentable.question.id
+      channel = "/questions/#{question_id}"
+      json = { type: 'comment', action: action_name }
 
-    case action_name
-    when 'destroy'
-      PrivatePub.publish_to("/questions/#{question_id}",
-                            comment_id: @comment.id,
-                            type: @comment.class.name.downcase,
-                            parent: @comment.commentable_type.downcase,
-                            parent_id: @comment.commentable_id,
-                            action: action_name)
-    else
-      PrivatePub.publish_to("/questions/#{question_id}",
-                            comment: @comment.to_json,
-                            type: @comment.class.name.downcase,
-                            parent: @comment.commentable_type.downcase,
-                            parent_id: @comment.commentable_id,
-                            action: action_name) if @comment.valid?
+      if action_name == 'destroy'
+        json[:comment_id] = @comment.id
+      else
+        json[:comment] = CommentSerializer.new(@comment, root: false).to_json
+      end
+      PrivatePub.publish_to(channel, json)
     end
   end
 

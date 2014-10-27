@@ -54,43 +54,46 @@ class @Question
           when 'update' then self.updateAnswer(data)
           when 'destroy' then self.destroyAnswer(data.answer_id)
       else if data.type is 'comment'
-        parentEl = switch 
-          when data.parent is 'question' then self.el
-          when data.parent is 'answer' then self.getAnswerEl(data.parent_id)
         switch data.action
-          when 'create' then self.createComment(parentEl, data)
+          when 'create' then self.createComment(data)
           when 'update' then self.updateComment(data)
           when 'destroy' then self.destroyComment(data.comment_id)
 
-  createComment: (parentEl, data) =>
+  createComment: (data) =>
     comment = $.parseJSON(data['comment'])
-    commentEl = this.createCommentEl(comment.id)
+    commentEl = @createCommentEl(comment.id)
+    parentEl = @getParentEl(comment.parent, comment.parent_id)
     c = new Comment(commentEl)
     commentEl.trigger('comment:create', [parentEl, comment])
 
   updateComment: (data) =>
     comment = $.parseJSON(data['comment'])
-    commentEl = this.getCommentEl(comment.id)
+    commentEl = @getCommentEl(comment.id)
     commentEl.trigger('comment:update', comment)
 
   destroyComment: (id) =>
-    commentEl = this.getCommentEl(id)
+    commentEl = @getCommentEl(id)
     commentEl.trigger('comment:destroy')
 
   createAnswer: (data) =>
     answer = $.parseJSON(data['answer'])
-    answerEl = this.createAnswerEl(answer.id)
+    answerEl = @createAnswerEl(answer.id)
     a = new Answer(answerEl)
     answerEl.trigger('answer:create', answer)
 
   updateAnswer: (data) =>
     answer = $.parseJSON(data['answer'])
-    answerEl = this.getAnswerEl(answer.id)
+    answerEl = @getAnswerEl(answer.id)
     answerEl.trigger('answer:update', answer)
 
   destroyAnswer: (id) =>
-    answerEl = this.getAnswerEl(id)
+    answerEl = @getAnswerEl(id)
     answerEl.trigger('answer:destroy')
+
+  getParentEl: (type, id) =>
+    switch type
+      when 'question' then @el
+      when 'answer' then @getAnswerEl(id)
 
   getAnswerEl: (id) ->
     $('.answer[data-answer="' + id + '"]') 

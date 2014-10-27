@@ -18,7 +18,7 @@ feature 'Delete question comment', %q{
         click_on 'Delete'
         wait_for_ajax
       
-        sleep(0.5)
+        sleep(1)
         expect(current_path).to eq question_path(question)
         expect(page).not_to have_content comment.body
         expect(page).not_to have_selector "#comment-#{comment.id}"

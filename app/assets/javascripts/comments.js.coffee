@@ -37,9 +37,8 @@ class @Comment
     self = this
 
     @el.on 'ajax:success', @editComment, (e, data, status, xhr) ->
-      console.log('editComment')
       self.el.find(self.editComment).hide()
-      self.el.append(HandlebarsTemplates['comments/edit_form'](data))
+      self.el.append(HandlebarsTemplates['comments/edit_form'](data.comment))
 
     @el.on 'ajax:error', @form, (e, xhr, status) ->
       formErrorsEl = self.el.find(self.formErrors)

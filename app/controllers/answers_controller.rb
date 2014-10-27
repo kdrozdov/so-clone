@@ -28,17 +28,16 @@ class AnswersController < ApplicationController
   private
 
   def publish_answer
-    case action_name
-    when 'destroy'
-      PrivatePub.publish_to("/questions/#{@answer.question.id}",
-                            answer_id: @answer.id,
-                            type: @answer.class.name.downcase,
-                            action: action_name)
-    else
-      PrivatePub.publish_to("/questions/#{@answer.question.id}",
-                            answer: AnswerSerializer.new(@answer, root: false).to_json,
-                            type: @answer.class.name.downcase,
-                            action: action_name) if @answer.valid?
+    if @answer.valid?
+      channel = "/questions/#{@answer.question.id}"
+      json = { type: 'answer', action: action_name }
+
+      if action_name == 'destroy'
+        json[:answer_id] = @answer.id
+      else
+        json[:answer] = AnswerSerializer.new(@answer, root: false).to_json
+      end
+      PrivatePub.publish_to(channel, json)
     end
   end
 
