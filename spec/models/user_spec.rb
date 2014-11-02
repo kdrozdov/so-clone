@@ -15,6 +15,10 @@
 #  last_sign_in_at        :datetime
 #  current_sign_in_ip     :inet
 #  last_sign_in_ip        :inet
+#  confirmation_token     :string(255)
+#  confirmed_at           :datetime
+#  confirmation_sent_at   :datetime
+#  unconfirmed_email      :string(255)
 #
 
 require 'rails_helper'
@@ -72,11 +76,6 @@ RSpec.describe User, type: :model do
           expect(User.find_for_oauth(auth)).to be_a(User)
         end
 
-        it 'fills user email' do
-          user = User.find_for_oauth(auth)
-          expect(user.email).to eq auth.info[:email]
-        end
-
         it 'creates authorization for user' do
           user = User.find_for_oauth(auth)
           expect(user.authorizations).to_not be_empty
@@ -89,7 +88,27 @@ RSpec.describe User, type: :model do
           expect(authorization.uid).to eq auth.uid
         end
       end
+    end
+  end
 
+  describe '.create_user_for_oauth' do
+    let(:email) { 'new@user.com' }
+    let(:provider) { 'facebook' }
+    let(:uid) { '123456' }
+
+    it 'creates new user' do
+      expect { User.create_user_for_oauth(email, uid, provider) }.to change(User, :count).by(1)
+    end
+
+    it 'fills user email when email is provided' do
+      user = User.create_user_for_oauth(email, uid, provider)
+      expect(user.email).to eq email
+    end
+
+    it 'fills user email with temp value when email is not provided' do
+      user = User.create_user_for_oauth(nil, uid, provider)
+      temp_email = "change@me-#{uid}-#{provider}.com"
+      expect(user.email).to eq temp_email
     end
   end
 
@@ -104,6 +123,19 @@ RSpec.describe User, type: :model do
 
     it 'true when user is an author of the object' do
       expect(object_author.author_of?(object)).to eq true
+    end
+  end
+
+  describe '#email_verified?' do
+    let(:user) { create(:user) }
+    let(:user_with_temp_email) { create(:user, email: "change@me-123456-twitter.com" )}
+
+    it 'false when user have temp email' do
+      expect(user_with_temp_email.email_verified?).to eq false
+    end
+
+    it 'true when user have verified email' do
+      expect(user.email_verified?).to eq true
     end
   end
 end

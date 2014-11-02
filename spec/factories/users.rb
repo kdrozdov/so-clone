@@ -15,6 +15,10 @@
 #  last_sign_in_at        :datetime
 #  current_sign_in_ip     :inet
 #  last_sign_in_ip        :inet
+#  confirmation_token     :string(255)
+#  confirmed_at           :datetime
+#  confirmation_sent_at   :datetime
+#  unconfirmed_email      :string(255)
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl
@@ -28,5 +32,8 @@ FactoryGirl.define do
     email
     password '12345678'
     password_confirmation '12345678'
+
+    confirmed_at Time.now
+    confirmation_sent_at 10.days.ago
   end
 end

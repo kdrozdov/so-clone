@@ -1,0 +1,14 @@
+h1 Add Email
+
+= form_for @user, url: update_profile_path(@user), html: { method: :patch } do |f|
+  -@user.errors.any?
+    ul.alert-box.alert
+      - @user.errors.full_messages.each do |message|
+        li = message
+
+  p.form-field
+    = f.label :email
+    = f.text_field :email, autofocus: true, value: '', placeholder: 'Example: email@me.com'
+
+  p
+    = f.submit 'Continue', class: 'button tiny'

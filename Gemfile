@@ -14,6 +14,7 @@ group :development do
 	gem 'rails_layout'
   gem 'rubocop'
   gem 'annotate'
+  gem 'mailcatcher'
 end
 
 group :test do
@@ -48,3 +49,4 @@ gem 'responders'
 gem 'active_model_serializers'
 gem 'omniauth'
 gem 'omniauth-facebook'
+gem 'omniauth-twitter'

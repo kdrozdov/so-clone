@@ -64,7 +64,7 @@ RSpec.describe QuestionsController do
 
       it 'sets the current user as question author' do
         request
-        expect(assigns(:question).author).to eq subject.current_user
+        expect(assigns(:question).author).to eq @user
       end
     end
 
