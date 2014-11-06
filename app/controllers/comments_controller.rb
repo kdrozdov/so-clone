@@ -4,6 +4,7 @@ class CommentsController < ApplicationController
   before_action :load_parent, only: [:create]
   after_action :publish_comment, only: [:create, :update, :destroy]
 
+  authorize_resource
   respond_to :json
 
   def show

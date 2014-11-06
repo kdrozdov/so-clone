@@ -2,9 +2,9 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!, only: [:create, :update, :destroy]
   before_action :set_answer, only: [:show, :update, :destroy]
   before_action :set_question, only: [:create]
-  before_action :verify_authorship, only: [:update, :destroy]
   after_action :publish_answer, only: [:create, :update, :destroy]
 
+  authorize_resource
   respond_to :json
 
   def show
@@ -43,10 +43,6 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body, attachments_attributes: [:file, :id, :_destroy])
-  end
-
-  def verify_authorship
-    return head :forbidden unless current_user.author_of?(@answer)
   end
 
   def set_answer

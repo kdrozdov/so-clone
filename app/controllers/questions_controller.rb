@@ -1,10 +1,10 @@
 class QuestionsController <  ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_question, only: [:show, :edit, :update, :destroy]
-  before_action :verify_authorship, only: [:edit, :update, :destroy]
   before_action :set_answer, only: [:show]
   after_action :publish_question, only: [:create, :update, :destroy]
 
+  authorize_resource
   respond_to :html
 
   def index
@@ -60,12 +60,5 @@ class QuestionsController <  ApplicationController
 
   def set_answer
     @answer = Answer.new
-  end
-
-  def verify_authorship
-    unless current_user.author_of?(@question)
-      message = 'You do not have permission to perform this action.'
-      redirect_to(@question, flash: { warning: message })
-    end
   end
 end

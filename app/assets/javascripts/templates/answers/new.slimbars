@@ -1,0 +1,5 @@
+.answer-wrapper.panel data-answer="{{id}}"
+  .answer
+  .comments
+    a.button.tiny.add-comment href=""
+      | Add a comment

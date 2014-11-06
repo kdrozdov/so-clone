@@ -2,7 +2,7 @@
   h2 = @question.title
   hr
 
-  - if user_is_author_of?(@question)
+  - if can? :update, @question
     ul.button-group.right
       li = link_to "Edit question", edit_question_path, class: 'button tiny'
       li = link_to "Delete question", @question, method: :delete, data: { confirm: true }, class: 'button alert tiny'

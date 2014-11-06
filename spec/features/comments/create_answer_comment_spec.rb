@@ -13,7 +13,7 @@ feature 'Add comment to Answer', %q{
     sign_in user
     visit question_path(answer.question)
 
-    within '.answer' do
+    within '.answer-wrapper' do
       click_on 'Add a comment'
       fill_in 'Comment', with: 'Answer comment'
       click_on 'Save'
@@ -29,7 +29,7 @@ feature 'Add comment to Answer', %q{
     sign_in user
     visit question_path(answer.question)
 
-    within '.answer' do
+    within '.answer-wrapper' do
       click_on 'Add a comment'
       click_on 'Save'
 
@@ -43,7 +43,7 @@ feature 'Add comment to Answer', %q{
   scenario "Non-authenticated user tries to create comment" do
     visit question_path(answer.question)
 
-    within '.answer' do
+    within '.answer-wrapper' do
       expect(page).not_to have_link("Add a comment")
     end
   end

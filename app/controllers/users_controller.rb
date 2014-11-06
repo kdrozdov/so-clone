@@ -3,6 +3,8 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:finish_signup, :update_profile]
   before_action :current_user?, only: [:finish_signup, :update_profile]
 
+  authorize_resource
+
   def update_profile
     if @user.update(user_params)
       sign_in(@user, bypass: true)

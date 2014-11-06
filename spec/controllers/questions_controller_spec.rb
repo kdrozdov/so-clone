@@ -85,7 +85,6 @@ RSpec.describe QuestionsController do
   describe 'GET #edit', login: :question_author do
     let(:request) { get :edit, id: question }
     it_behaves_like 'inhospitable'
-    it_behaves_like 'owner verifier'
 
     it 'assigns the requested question to @question' do
       request
@@ -101,7 +100,6 @@ RSpec.describe QuestionsController do
   describe 'PATCH #update', login: :question_author do
     let(:request) { patch :update, id: question, question: attributes }
     it_behaves_like 'inhospitable'
-    it_behaves_like 'owner verifier'
 
     context 'with valid attributes' do
       it 'assigns the requested question to @question' do
@@ -147,7 +145,6 @@ RSpec.describe QuestionsController do
   describe 'DELETE #destroy', login: :question_author do
     let(:request) { delete :destroy, id: question }
     it_behaves_like 'inhospitable'
-    it_behaves_like 'owner verifier'
 
     it 'deletes question' do
       expect { request }.to change(@user.questions, :count).by(-1)

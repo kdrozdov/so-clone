@@ -51,7 +51,6 @@ RSpec.describe AnswersController do
             format: :json)
     end
     it_behaves_like 'AJAX inhospitable'
-    it_behaves_like 'AJAX owner verifier'
 
     context 'with valid attributes' do
       it 'assigns the requested answer to @answer' do
@@ -101,7 +100,6 @@ RSpec.describe AnswersController do
              format: :json)
     end
     it_behaves_like 'AJAX inhospitable'
-    it_behaves_like 'AJAX owner verifier'
 
     it 'deletes answer' do
       expect { request }.to change(@question.answers, :count).by(-1)

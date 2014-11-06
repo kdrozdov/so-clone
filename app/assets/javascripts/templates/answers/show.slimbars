@@ -1,12 +1,13 @@
+
+|{{#ifeq user_id author_id}}
 ul.button-group.right
-  |{{#ifeq user_id author_id}}
   li 
     a.button.tiny.edit-answer-link[href="/answers/{{id}}" data-remote="true" data-type="json"] Edit
   li
     a.button.alert.tiny.delete-answer-link[href="/answers/{{id}}" rel="nofollow" data-remote="true" data-type="json" data-method="delete" data-confirm="Are you sure?"] Delete
-  |{{/ifeq}}
+|{{/ifeq}}
 
-p.answer-body
+p
   |{{body}}
 
 |{{#if attachments.length}}

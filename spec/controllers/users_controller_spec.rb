@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe UsersController do
   
   describe 'GET #finish_signup' do
-    let(:user) { create(:user) }
+    let(:user) { create(:user, email: 'change@me-123456-twitter.com') }
     let(:other_user) { create(:user) }
     let(:request) { get :finish_signup, id: user }
     

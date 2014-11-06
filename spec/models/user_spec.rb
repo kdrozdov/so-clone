@@ -100,6 +100,11 @@ RSpec.describe User, type: :model do
       expect { User.create_user_for_oauth(email, uid, provider) }.to change(User, :count).by(1)
     end
 
+    it 'skips user confirmation' do
+      user = User.create_user_for_oauth(email, uid, provider)
+      expect(user.confirmed?).to eq true
+    end
+
     it 'fills user email when email is provided' do
       user = User.create_user_for_oauth(email, uid, provider)
       expect(user.email).to eq email

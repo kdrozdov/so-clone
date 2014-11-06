@@ -1,10 +1,11 @@
+
+|{{#ifeq user_id author_id}}
 ul.button-group.right
-  |{{#ifeq user_id author_id}}
   li 
     a.button.tiny.edit-comment[href="/comments/{{id}}" data-remote="true" data-type="json"] Edit
   li
     a.button.alert.tiny.delete-comment[href="/comments/{{id}}" rel="nofollow" data-remote="true" data-type="json" data-method="delete" data-confirm="Are you sure?"] Delete
-  |{{/ifeq}}
+|{{/ifeq}}
 
-p.comment-body
+p
   |{{body}}

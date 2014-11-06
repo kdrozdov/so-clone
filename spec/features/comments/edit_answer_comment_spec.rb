@@ -14,7 +14,7 @@ feature 'Edit answer comment', %q{
     sign_in comment.author
     visit question_path(answer.question)
 
-    within '.answer' do
+    within '.answer-wrapper' do
       within '.comment' do
         click_on 'Edit'
         fill_in 'Comment', with: 'Edited comment'

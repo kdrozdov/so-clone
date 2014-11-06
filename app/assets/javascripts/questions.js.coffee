@@ -61,10 +61,10 @@ class @Question
 
   createComment: (data) =>
     comment = $.parseJSON(data['comment'])
-    commentEl = @createCommentEl(comment.id)
     parentEl = @getParentEl(comment.parent, comment.parent_id)
+    commentEl = @createCommentEl(comment.id, parentEl)
     c = new Comment(commentEl)
-    commentEl.trigger('comment:create', [parentEl, comment])
+    commentEl.trigger('comment:create', comment)
 
   updateComment: (data) =>
     comment = $.parseJSON(data['comment'])
@@ -96,16 +96,21 @@ class @Question
       when 'answer' then @getAnswerEl(id)
 
   getAnswerEl: (id) ->
-    $('.answer[data-answer="' + id + '"]') 
+    $('.answer-wrapper[data-answer="' + id + '"]') 
 
   getCommentEl: (id) ->
-    $('.comment[data-comment="' + id + '"]')
+    $('.comment-wrapper[data-comment="' + id + '"]')
 
   createAnswerEl: (id) ->
-    $('<div></div>').attr({class: 'answer panel', 'data-answer': id})
+    newAnswerTemplate = HandlebarsTemplates['answers/new']({ id: id })
+    $('.answers').prepend(newAnswerTemplate)
+    $('.answers').find('.answer-wrapper[data-answer="' + id + '"]')
 
-  createCommentEl: (id) ->
-    $('<div></div>').attr({class: 'comment', 'data-comment': id})
+  createCommentEl: (id, parentEl) =>
+    newCommentTemplate = HandlebarsTemplates['comments/new']({ id: id })
+    commentsEl = parentEl.find('.comments')
+    commentsEl.prepend(newCommentTemplate)
+    commentsEl.find('.comment-wrapper[data-comment="' + id + '"]')
 
   clearForm: (form) ->
     form.find('.form-errors').html('')

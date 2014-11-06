@@ -1,7 +1,8 @@
 class @Comment
   constructor: (@el) ->
     @userId = $('body').data('userId')
-    @wrapper = '.comments'
+    @commentEl = @el.find('.comment')
+
     @cancelEdit = '.cancel-edit'
     @editComment = '.edit-comment'
     @form = 'form.edit_comment'
@@ -10,25 +11,23 @@ class @Comment
     this.binds()
     this.setAjaxHooks()
       
-  render: (parent, data) =>
+  render: (data) =>
     data.user_id = @userId
-    @el.html(HandlebarsTemplates['comments/show'](data))
-    parent.find(@wrapper).prepend(@el)
+    @commentEl.html(HandlebarsTemplates['comments/show'](data))
 
   binds: () ->
     self = this
 
-    @el.on 'click', @cancelEdit, (e) ->
+    @commentEl.on 'click', @cancelEdit, (e) ->
       e.preventDefault()
-      self.el.find(self.editComment).show()
-      self.el.find(self.form).remove()
+      self.commentEl.find(self.editComment).show()
+      self.commentEl.find(self.form).remove()
 
-    @el.on 'comment:create', (e, parent, data) ->
-      self.render(parent, data)
+    @el.on 'comment:create', (e, data) ->
+      self.render(data)
 
     @el.on 'comment:update', (e, data) ->
-      data.user_id = self.userId
-      self.el.html(HandlebarsTemplates['comments/show'](data))
+      self.render(data)
 
     @el.on 'comment:destroy', (e) ->
       self.el.remove()
@@ -36,10 +35,10 @@ class @Comment
   setAjaxHooks: () ->
     self = this
 
-    @el.on 'ajax:success', @editComment, (e, data, status, xhr) ->
-      self.el.find(self.editComment).hide()
-      self.el.append(HandlebarsTemplates['comments/edit_form'](data.comment))
+    @commentEl.on 'ajax:success', @editComment, (e, data, status, xhr) ->
+      self.commentEl.find(self.editComment).hide()
+      self.commentEl.append(HandlebarsTemplates['comments/edit_form'](data.comment))
 
-    @el.on 'ajax:error', @form, (e, xhr, status) ->
+    @commentEl.on 'ajax:error', @form, (e, xhr, status) ->
       formErrorsEl = self.el.find(self.formErrors)
       formErrorsEl.html(HandlebarsTemplates['shared/errors']({ errors: xhr.responseJSON.errors }))

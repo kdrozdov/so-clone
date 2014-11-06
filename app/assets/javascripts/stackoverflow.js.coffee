@@ -1,10 +1,10 @@
 $ ->
   question = new Question($('.question'))
 
-  $('.answers .answer').each((i, e) ->
+  $('.answers .answer-wrapper').each((i, e) ->
     answer = new Answer($(e)))
 
-  $('.comments .comment').each((i, e) ->
+  $('.comments .comment-wrapper').each((i, e) ->
     comment = new Comment($(e)))
 
   PrivatePub.subscribe "/questions", (data, channel) ->

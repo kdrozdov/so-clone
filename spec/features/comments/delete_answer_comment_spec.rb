@@ -13,7 +13,7 @@ feature 'Delete answer comment', %q{
     sign_in comment.author
     visit question_path(answer.question)
 
-    within '.answer' do
+    within '.answer-wrapper' do
       within '.comments' do
         click_on 'Delete'
         wait_for_ajax
