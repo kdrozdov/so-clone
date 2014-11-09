@@ -29,7 +29,7 @@ class CommentsController < ApplicationController
 
   def publish_comment
     if @comment.valid?
-      question_id = @comment.commentable.id if @comment.commentable.instance_of? Question
+      question_id = @comment.commentable.id if @comment.commentable.is_a? Question
       question_id ||= @comment.commentable.question.id
       channel = "/questions/#{question_id}"
       json = { type: 'comment', action: action_name }

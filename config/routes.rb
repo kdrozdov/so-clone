@@ -2,8 +2,8 @@ Rails.application.routes.draw do
   use_doorkeeper
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
 
-  get '/users/:id/finish_signup', to: 'users#finish_signup', as: 'finish_signup'
-  patch '/users/:id/finish_signup/update', to: 'users#update_profile', as: 'update_profile'
+  get '/users/finish_signup', to: 'users#finish_signup', as: 'finish_signup'
+  patch '/users/finish_signup/update', to: 'users#update_profile', as: 'update_profile'
 
   concern :commentable do
     resources :comments

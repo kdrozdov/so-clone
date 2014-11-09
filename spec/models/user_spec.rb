@@ -67,9 +67,26 @@ RSpec.describe User, type: :model do
 
       context 'user does not exist' do
         let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456', info: { email: 'new@user.com'}) }
+        let(:auth_without_email) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456', info: { })}
 
         it 'creates new user' do
            expect { User.find_for_oauth(auth) }.to change(User, :count).by(1)
+        end
+
+        it 'skips user confirmation' do
+          user = User.find_for_oauth(auth)
+          expect(user.confirmed?).to be true
+        end
+
+        it 'fills user email when email is provided' do
+          user = User.find_for_oauth(auth)
+          expect(user.email).to eq auth.info.email
+        end
+
+        it 'fills user email with temp value when email is not provided' do
+          user = User.find_for_oauth(auth_without_email)
+          temp_email = "change@me-#{auth.uid}-#{auth.provider}.com"
+          expect(user.email).to eq temp_email
         end
 
         it 'returns new user' do
@@ -91,43 +108,17 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '.create_user_for_oauth' do
-    let(:email) { 'new@user.com' }
-    let(:provider) { 'facebook' }
-    let(:uid) { '123456' }
-
-    it 'creates new user' do
-      expect { User.create_user_for_oauth(email, uid, provider) }.to change(User, :count).by(1)
-    end
-
-    it 'skips user confirmation' do
-      user = User.create_user_for_oauth(email, uid, provider)
-      expect(user.confirmed?).to eq true
-    end
-
-    it 'fills user email when email is provided' do
-      user = User.create_user_for_oauth(email, uid, provider)
-      expect(user.email).to eq email
-    end
-
-    it 'fills user email with temp value when email is not provided' do
-      user = User.create_user_for_oauth(nil, uid, provider)
-      temp_email = "change@me-#{uid}-#{provider}.com"
-      expect(user.email).to eq temp_email
-    end
-  end
-
   describe '#author_of?' do
     let(:user) { create(:user) }
     let(:object_author) { create(:user) }
     let(:object) { create(:question, author: object_author) }
 
     it 'false when user is not an author of the object' do
-      expect(user.author_of?(object)).to eq false
+      expect(user.author_of?(object)).to be false
     end
 
     it 'true when user is an author of the object' do
-      expect(object_author.author_of?(object)).to eq true
+      expect(object_author.author_of?(object)).to be true
     end
   end
 
@@ -136,11 +127,11 @@ RSpec.describe User, type: :model do
     let(:user_with_temp_email) { create(:user, email: "change@me-123456-twitter.com" )}
 
     it 'false when user have temp email' do
-      expect(user_with_temp_email.email_verified?).to eq false
+      expect(user_with_temp_email.email_verified?).to be false
     end
 
     it 'true when user have verified email' do
-      expect(user.email_verified?).to eq true
+      expect(user.email_verified?).to be true
     end
   end
 end

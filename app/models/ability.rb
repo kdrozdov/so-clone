@@ -5,10 +5,7 @@ class Ability
   def initialize(user)
     @user = user
 
-    if !user
-      guest_abilities
-      return
-    end
+    return guest_abilities if !user
 
     if user.admin?
       admin_abilities

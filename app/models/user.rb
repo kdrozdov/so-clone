@@ -39,7 +39,6 @@ class User < ActiveRecord::Base
   def self.find_for_oauth(auth)
     authorization = Authorization.where(provider: auth.provider, uid: auth.uid.to_s).first
     return authorization.user if authorization
-
     email = auth.info.email
     user = User.where(email: email).first if email
 
@@ -52,6 +51,16 @@ class User < ActiveRecord::Base
     user
   end
 
+  def create_authorization(auth)
+    self.authorizations.create(provider: auth.provider, uid: auth.uid)
+  end
+
+  def email_verified?
+    self.email && self.email !~ TEMP_EMAIL_REGEX
+  end
+
+  private
+
   def self.create_user_for_oauth(email, uid, provider)
     password = Devise.friendly_token[0, 20]
     temp_email = "#{TEMP_EMAIL_PREFIX}-#{uid}-#{provider}.com"
@@ -63,13 +72,5 @@ class User < ActiveRecord::Base
     user.skip_confirmation!
     user.save!
     user
-  end
-
-  def create_authorization(auth)
-    self.authorizations.create(provider: auth.provider, uid: auth.uid)
-  end
-
-  def email_verified?
-    self.email && self.email !~ TEMP_EMAIL_REGEX
   end
 end

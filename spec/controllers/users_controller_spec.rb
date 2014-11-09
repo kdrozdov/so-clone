@@ -24,11 +24,6 @@ RSpec.describe UsersController do
       request
       expect(response).to render_template :finish_signup
     end
-
-    it 'redirects to root path when user is not current user' do
-      get :finish_signup, id: other_user
-      expect(response).to redirect_to root_path
-    end
   end
 
   describe 'GET #update_profile' do

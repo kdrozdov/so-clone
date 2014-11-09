@@ -2,9 +2,11 @@ require 'rails_helper'
 require 'capybara/poltergeist'
 
 RSpec.configure do |config|
-	Capybara.javascript_driver = :poltergeist
-
+	config.include OmniauthMacros, type: :feature
 	config.include FeatureMacros, type: :feature
+  
+  OmniAuth.config.test_mode = true
+	Capybara.javascript_driver = :poltergeist
 	config.use_transactional_fixtures = false
 	
 	config.before(:suite) do
