@@ -17,6 +17,8 @@ RSpec.describe Ability, type: :model do
     let(:user) { create :user }
     let(:other) { create :user }
 
+    it { should be_able_to :me, User }
+
     it { should_not be_able_to :manage, :all }
     it { should be_able_to :read, :all }
 

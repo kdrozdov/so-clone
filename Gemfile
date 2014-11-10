@@ -19,7 +19,7 @@ end
 
 group :test do
 	gem 'shoulda-matchers'
-
+  gem 'json_spec'
 end
 
 group :production do

@@ -32,6 +32,7 @@ class Ability
 
   def user_abilities
     guest_abilities
+    can :me, User
     can :create, [Question, Answer, Comment]
     can [:update, :destroy], [Question, Answer, Comment], author: user
   end
