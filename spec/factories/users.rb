@@ -19,17 +19,16 @@
 #  confirmed_at           :datetime
 #  confirmation_sent_at   :datetime
 #  unconfirmed_email      :string(255)
+#  admin                  :boolean
+#  username               :string(255)      default(""), not null
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  sequence :email do |n|
-    "user#{n}@test.com"
-  end
-
   factory :user do
-    email
+    sequence(:email) { |n| "user#{n}@test.com" }
+    sequence(:username) { |n| "user#{n}" }
     password '12345678'
     password_confirmation '12345678'
 

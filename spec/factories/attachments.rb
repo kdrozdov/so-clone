@@ -12,8 +12,11 @@
 
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
+include ActionDispatch::TestProcess
+
 FactoryGirl.define do
-  factory :attachment do
-    file 'MyString'
+  factory :attachment, class: "Attachment" do
+    file { fixture_file_upload(Rails.root.join('spec/support/files/test.txt')) }
+    association :attachmentable
   end
 end

@@ -1,6 +1,7 @@
 require "application_responder"
 
 class ApplicationController < ActionController::Base
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   self.responder = ApplicationResponder
   respond_to :html
@@ -13,5 +14,11 @@ class ApplicationController < ActionController::Base
       format.html { redirect_to root_url, alert: exception.message }
       format.json { render json: :nothing, status: 401 }
     end
+  end
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.for(:sign_up) << :username
   end
 end

@@ -19,6 +19,8 @@
 #  confirmed_at           :datetime
 #  confirmation_sent_at   :datetime
 #  unconfirmed_email      :string(255)
+#  admin                  :boolean
+#  username               :string(255)      default(""), not null
 #
 
 require 'rails_helper'
@@ -29,6 +31,12 @@ RSpec.describe User, type: :model do
 
   it { should validate_presence_of :email }
   it { should validate_presence_of :password }
+
+  it { is_expected.to validate_presence_of :username }
+  it { is_expected.to validate_uniqueness_of(:username).case_insensitive }
+  it { is_expected.to ensure_length_of(:username).is_at_least(3).is_at_most(64) }
+  it { is_expected.to allow_value("user", "user123", "user_new").for(:username) }
+  it { is_expected.not_to allow_value("12", "$#!user", "user new").for(:username) }
 
   describe '.find_for_oauth' do
     let!(:user) { create(:user) }
@@ -81,6 +89,12 @@ RSpec.describe User, type: :model do
         it 'fills user email when email is provided' do
           user = User.find_for_oauth(auth)
           expect(user.email).to eq auth.info.email
+        end
+
+        it 'fills username email with temp value' do
+          user = User.find_for_oauth(auth)
+          temp_username = "#{auth.provider}_#{auth.uid}"
+          expect(user.username).to eq temp_username
         end
 
         it 'fills user email with temp value when email is not provided' do

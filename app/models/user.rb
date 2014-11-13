@@ -19,11 +19,14 @@
 #  confirmed_at           :datetime
 #  confirmation_sent_at   :datetime
 #  unconfirmed_email      :string(255)
+#  admin                  :boolean
+#  username               :string(255)      default(""), not null
 #
 
 class User < ActiveRecord::Base
   TEMP_EMAIL_PREFIX = 'change@me'
   TEMP_EMAIL_REGEX = /\Achange@me/
+  USERNAME_REGEX = /\A[\w\d_]+\z/
 
   devise :database_authenticatable, :registerable, 
          :confirmable, :recoverable, :rememberable, :trackable,
@@ -31,6 +34,9 @@ class User < ActiveRecord::Base
 
   has_many :authorizations, dependent: :destroy
   has_many :questions, foreign_key: 'author_id', dependent: :destroy
+
+  validates :username, presence: true, uniqueness: { case_sensitive: false }, length: { in: 3..64 }, 
+            format: { with: USERNAME_REGEX, message: "allows only latin letters, numbers, and underscore." }
 
   def author_of?(object)
     self == object.author
@@ -45,7 +51,7 @@ class User < ActiveRecord::Base
     if user
       user.create_authorization(auth)
     else
-      user = User.create_user_for_oauth(email, auth.uid, auth.provider)
+      user = User.create_user_for_oauth(email, auth)
       user.create_authorization(auth)
     end
     user
@@ -61,10 +67,12 @@ class User < ActiveRecord::Base
 
   private
 
-  def self.create_user_for_oauth(email, uid, provider)
+  def self.create_user_for_oauth(email, auth)
     password = Devise.friendly_token[0, 20]
-    temp_email = "#{TEMP_EMAIL_PREFIX}-#{uid}-#{provider}.com"
+    username = "#{auth.provider}_#{auth.uid}"
+    temp_email = "#{TEMP_EMAIL_PREFIX}-#{auth.uid}-#{auth.provider}.com"
     user = User.new(
+      username: username,
       email: email ? email : temp_email,
       password: password,
       password_confirmation: password
