@@ -34,6 +34,7 @@ class User < ActiveRecord::Base
 
   has_many :authorizations, dependent: :destroy
   has_many :questions, foreign_key: 'author_id', dependent: :destroy
+  has_many :answers, foreign_key: 'author_id', dependent: :destroy
 
   validates :username, presence: true, uniqueness: { case_sensitive: false }, length: { in: 3..64 }, 
             format: { with: USERNAME_REGEX, message: "allows only latin letters, numbers, and underscore." }
