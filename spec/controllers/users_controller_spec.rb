@@ -4,51 +4,40 @@ RSpec.describe UsersController do
   
   describe 'GET #finish_signup' do
     let(:user) { create(:user, email: 'change@me-123456-twitter.com') }
-    let(:other_user) { create(:user) }
-    let(:request) { get :finish_signup, id: user }
     
-    before do |e|
-      unless e.metadata[:skip_login]
-        login(user)
-      end
-    end
+    before { |e| login(user) unless e.metadata[:skip_login] }
+    before { |e| do_request unless e.metadata[:skip_request] }
 
-    it_behaves_like 'inhospitable'
+    it_behaves_like 'authenticable'
 
     it 'assigns user to @user' do
-      request
       expect(assigns(:user)).to eq user
     end
 
     it 'renders finish signup view' do
-      request
       expect(response).to render_template :finish_signup
+    end
+
+    def do_request
+      get :finish_signup, id: user
     end
   end
 
   describe 'GET #update_profile' do
     let(:user) { create(:user, email: 'change@me-123456-twitter.com') }
-    let(:other_user) { create(:user) }
-    let(:request) { patch(:update_profile,
-                    id: user,
-                    user: { email: 'new@test.com' })}
+    let(:attributes) {{ email: 'new@test.com' }}
     
-    before do |e|
-      unless e.metadata[:skip_login]
-        login(user)
-      end
-    end
-
-    it_behaves_like 'inhospitable'
+    before { |e| login(user) unless e.metadata[:skip_login] }
+    before { |e| do_request unless e.metadata[:skip_request] }
+    
+    it_behaves_like 'authenticable'
 
     context 'with valid attributes' do
       it 'assigns uset to @user' do
-        request
         expect(assigns(:user)).to eq user
       end
 
       it 'changes user attributes' do
-        request
         user.reload
         user.confirm!
 
@@ -56,27 +45,25 @@ RSpec.describe UsersController do
       end
 
       it 'redirects to root path' do
-        request
         expect(response).to redirect_to root_path
       end
     end
 
     context 'with invalid attributes' do
-      let(:request) { patch(:update_profile,
-                      id: user,
-                      user: { email: '' })}
+      let(:attributes) {{ email: '' }}
 
       it 'does not change question attributes' do
-        request
         user.reload
-
         expect(user.email).to eq 'change@me-123456-twitter.com'
       end
 
       it 're-renders finish signup view' do
-        request
         expect(response).to render_template :finish_signup
       end
+    end
+
+    def do_request
+      patch :update_profile, id: user, user: attributes
     end
   end
 end

@@ -141,7 +141,7 @@ RSpec.describe 'Questions API' do
 
         it 'response with 422 status code' do
           do_request(access_token: access_token.token, question: attributes)
-          expect(response.status).to eq 422
+          expect(response.status).to eq 422 
         end
       end
     end

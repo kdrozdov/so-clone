@@ -34,36 +34,36 @@ RSpec.describe QuestionsController do
   end
 
   describe 'GET #new', login: :user do
-    let(:request) { get :new }
-    it_behaves_like 'inhospitable'
+    before { |e| do_request unless e.metadata[:skip_request] }
+    it_behaves_like 'authenticable'
 
     it 'assigns a new question to @question' do
-      request
       expect(assigns(:question)).to be_a_new(Question)
     end
 
     it 'renders new view' do
-      request
       expect(response).to render_template :new
+    end
+
+    def do_request
+      get :new
     end
   end
 
   describe 'POST #create', login: :user do
-    let(:request) { post :create, question: attributes }
-    it_behaves_like 'inhospitable'
+    before { |e| do_request unless e.metadata[:skip_request] }
+    it_behaves_like 'authenticable'
 
     context 'with valid attributes' do
-      it 'saves the new question' do
-        expect { request }.to change(@user.questions, :count).by(1)
+      it 'saves the new question', skip_request: true do
+        expect { do_request }.to change(@user.questions, :count).by(1)
       end
 
       it 'redirects to show view' do
-        request
         expect(response).to redirect_to question_path(assigns(:question))
       end
 
       it 'sets the current user as question author' do
-        request
         expect(assigns(:question).author).to eq @user
       end
     end
@@ -71,47 +71,49 @@ RSpec.describe QuestionsController do
     context 'with invalid attributes' do
       let(:attributes) { attributes_for(:invalid_question) }
 
-      it 'does not save the question' do
-        expect { request }.to_not change(Question, :count)
+      it 'does not save the question', skip_request: true do
+        expect { do_request }.to_not change(Question, :count)
       end
 
       it 're-renders new view' do
-        request
         expect(response).to render_template :new
       end
+    end
+
+    def do_request
+      post :create, question: attributes
     end
   end
 
   describe 'GET #edit', login: :question_author do
-    let(:request) { get :edit, id: question }
-    it_behaves_like 'inhospitable'
+    before { |e| do_request unless e.metadata[:skip_request] }
+    it_behaves_like 'authenticable'
 
     it 'assigns the requested question to @question' do
-      request
       expect(assigns(:question)).to eq question
     end
 
     it 'renders edit view', sign_in: :question_author do
-      request
       expect(response).to render_template :edit
+    end
+
+    def do_request
+      get :edit, id: question
     end
   end
 
   describe 'PATCH #update', login: :question_author do
-    let(:request) { patch :update, id: question, question: attributes }
-    it_behaves_like 'inhospitable'
+    let(:attributes) {{ title: 'new title', body: 'new body' }}
+    before { |e| do_request unless e.metadata[:skip_request] }
+
+    it_behaves_like 'authenticable'
 
     context 'with valid attributes' do
       it 'assigns the requested question to @question' do
-        request
-
         expect(assigns(:question)).to eq question
       end
 
       it 'changes question attributes' do
-        patch(:update,
-              id: question,
-              question: { title: 'new title', body: 'new body' })
         question.reload
 
         expect(question.title).to eq 'new title'
@@ -119,15 +121,13 @@ RSpec.describe QuestionsController do
       end
 
       it 'redirects to the updated question' do
-        request
-
         expect(response).to redirect_to question
       end
     end
 
     context 'with invalid attributes' do
       let(:attributes) { attributes_for(:invalid_question) }
-      before { request }
+
       it 'does not change question attributes' do
         question.reload
 
@@ -140,19 +140,25 @@ RSpec.describe QuestionsController do
       end
     end
 
+    def do_request
+        patch :update, id: question, question: attributes
+    end
   end
 
   describe 'DELETE #destroy', login: :question_author do
-    let(:request) { delete :destroy, id: question }
-    it_behaves_like 'inhospitable'
+    it_behaves_like 'authenticable'
 
     it 'deletes question' do
-      expect { request }.to change(@user.questions, :count).by(-1)
+      expect { do_request }.to change(@user.questions, :count).by(-1)
     end
 
     it 'redirects to index view' do
-      request
+      do_request
       expect(response).to redirect_to questions_path
+    end
+
+    def do_request
+      delete :destroy, id: question
     end
   end
 end
