@@ -20,6 +20,11 @@ RSpec.describe AnswersController do
       it 'have response status 201' do
         expect(response.status).to eq 201
       end
+
+      it 'publishes a message to question channel', skip_request: true do
+        expect(PrivatePub).to receive(:publish_to).with("/questions/#{question.id}", anything)
+        do_request
+      end
     end
 
     context 'with invalid attributes' do
@@ -31,6 +36,11 @@ RSpec.describe AnswersController do
 
       it 'have response status 422' do
         expect(response.status).to eq 422
+      end
+
+      it 'does not publish a message to question channel', skip_request: true do
+        expect(PrivatePub).to_not receive(:publish_to)
+        do_request
       end
     end
 
@@ -58,6 +68,11 @@ RSpec.describe AnswersController do
       it 'responses with 204 status' do
         expect(response.status).to eq 204
       end
+
+      it 'publishes a message to question channel', skip_request: true do
+        expect(PrivatePub).to receive(:publish_to).with("/questions/#{answer.question.id}", anything)
+        do_request
+      end
     end
 
     context 'with invalid attributes' do
@@ -70,6 +85,11 @@ RSpec.describe AnswersController do
 
       it 'responses with 422 status' do
         expect(response.status).to eq 422
+      end
+
+      it 'does not publish a message to question channel', skip_request: true do
+        expect(PrivatePub).to_not receive(:publish_to)
+        do_request
       end
     end
 
@@ -88,6 +108,11 @@ RSpec.describe AnswersController do
     it 'responses with 204 status' do
       do_request
       expect(response.status).to eq 204
+    end
+
+    it 'publishes a message to question channel', skip_request: true do
+      expect(PrivatePub).to receive(:publish_to).with("/questions/#{answer.question.id}", anything)
+      do_request
     end
 
     def do_request

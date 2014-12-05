@@ -15,6 +15,10 @@ group :development do
   gem 'rubocop'
   gem 'annotate'
   gem 'mailcatcher'
+  gem 'quiet_assets'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'foreman'
 end
 
 group :test do

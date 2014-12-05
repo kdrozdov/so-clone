@@ -13,6 +13,11 @@ RSpec.describe CommentsController do
         do_request
         expect(assigns(:parent)).to eq question
       end
+
+      it 'publishes a message to questions channel', skip_request: true do
+        expect(PrivatePub).to receive(:publish_to).with("/questions/#{question.id}", anything)
+        do_request
+      end
     end
 
     context 'when answer is parent' do
@@ -21,6 +26,11 @@ RSpec.describe CommentsController do
       it 'loads answer when parent is answer' do
         do_request answer_id: answer
         expect(assigns(:parent)).to eq answer
+      end
+
+      it 'publishes a message to questions channel', skip_request: true do
+        expect(PrivatePub).to receive(:publish_to).with("/questions/#{answer.question.id}", anything)
+        do_request answer_id: answer
       end
     end
 

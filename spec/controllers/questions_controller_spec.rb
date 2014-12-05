@@ -66,6 +66,11 @@ RSpec.describe QuestionsController do
       it 'sets the current user as question author' do
         expect(assigns(:question).author).to eq @user
       end
+
+      it 'publishes a message to questions channel', skip_request: true do
+        expect(PrivatePub).to receive(:publish_to).with('/questions', anything)
+        do_request
+      end
     end
 
     context 'with invalid attributes' do
@@ -77,6 +82,11 @@ RSpec.describe QuestionsController do
 
       it 're-renders new view' do
         expect(response).to render_template :new
+      end
+
+      it 'does not publish a message to PrivatePub', skip_request: true do
+        expect(PrivatePub).to_not receive(:publish_to)
+        do_request
       end
     end
 
@@ -123,6 +133,11 @@ RSpec.describe QuestionsController do
       it 'redirects to the updated question' do
         expect(response).to redirect_to question
       end
+
+      it 'publishes a message to questions channel', skip_request: true do
+        expect(PrivatePub).to receive(:publish_to).with('/questions', anything)
+        do_request
+      end
     end
 
     context 'with invalid attributes' do
@@ -137,6 +152,11 @@ RSpec.describe QuestionsController do
 
       it 're-renders edit view' do
         expect(response).to render_template :edit
+      end
+
+      it 'does not publish a message to PrivatePub', skip_request: true do
+        expect(PrivatePub).to_not receive(:publish_to)
+        do_request
       end
     end
 
@@ -155,6 +175,11 @@ RSpec.describe QuestionsController do
     it 'redirects to index view' do
       do_request
       expect(response).to redirect_to questions_path
+    end
+
+    it 'publishes a message to questions channel', skip_request: true do
+      expect(PrivatePub).to receive(:publish_to).with('/questions', anything)
+      do_request
     end
 
     def do_request

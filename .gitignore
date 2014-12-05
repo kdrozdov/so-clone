@@ -24,3 +24,5 @@ doc/
 .idea
 .rubocop.yml
 /public/uploads
+
+Procfile
