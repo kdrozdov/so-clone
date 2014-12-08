@@ -123,6 +123,16 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.send_daily_digest' do
+    let(:users) { create_list(:user, 2) }
+    let(:questions) { create_list(:question, 2, author: users.first) }
+
+    it 'should send daily digest to all users' do
+      users.each { |user| expect(DailyMailer).to receive(:digest).with(user, questions).and_call_original }
+      User.send_daily_digest
+    end
+  end
+
   describe '#author_of?' do
     let(:user) { create(:user) }
     let(:object_author) { create(:user) }

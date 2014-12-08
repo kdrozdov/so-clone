@@ -58,6 +58,15 @@ class User < ActiveRecord::Base
     user
   end
 
+  def self.send_daily_digest
+    questions = Question.where("created_at >= ?", 1.day.ago).to_a
+    return unless questions.present?
+
+    find_each.each do |user|
+      DailyMailer.delay.digest(user, questions)
+    end
+  end
+
   def create_authorization(auth)
     self.authorizations.create(provider: auth.provider, uid: auth.uid)
   end
