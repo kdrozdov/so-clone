@@ -8,19 +8,19 @@ class QuestionsController <  ApplicationController
   respond_to :html
 
   def index
-    respond_with(@questions = Question.all)
+    respond_with @questions = Question.page(params[:page])
   end
 
   def show
-    respond_with(@question)
+    respond_with @question
   end
 
   def new
-    respond_with(@question = Question.new)
+    respond_with @question = Question.new
   end
 
   def create
-    respond_with(@question = current_user.questions.create(question_params))
+    respond_with @question = current_user.questions.create(question_params)
   end
 
   def edit
@@ -28,11 +28,11 @@ class QuestionsController <  ApplicationController
 
   def update
     @question.update(question_params)
-    respond_with(@question)
+    respond_with @question
   end
 
   def destroy
-    respond_with(@question.destroy)
+    respond_with @question.destroy
   end
 
   private

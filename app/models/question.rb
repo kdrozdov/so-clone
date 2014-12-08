@@ -20,5 +20,7 @@ class Question < ActiveRecord::Base
   validates :body, presence: true
   validates :title, presence: true, length: { maximum: 255 }
 
+  paginates_per 15
+
   accepts_nested_attributes_for :attachments, reject_if: :all_blank, allow_destroy: true
 end

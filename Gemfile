@@ -59,3 +59,4 @@ gem 'oj_mimic_json'
 gem 'sidekiq'
 gem 'sidetiq'
 gem 'sinatra', '>= 1.3.0', require: nil
+gem 'kaminari'

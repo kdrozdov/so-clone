@@ -6,4 +6,6 @@ ul.questions
 		li.question data={ question: question.id }
 			= link_to question.title, question
 
+= paginate @questions
+
 = subscribe_to "/questions"
