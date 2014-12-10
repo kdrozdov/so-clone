@@ -12,7 +12,7 @@ $ ->
       questionJSON = $.parseJSON(data['question'])
       questionEl = createQuestionEl(questionJSON.id)
       questionEl.html(HandlebarsTemplates['questions/show'](questionJSON))
-      $('.questions').append(questionEl)
+      $('.questions').prepend(questionEl)
     else if data.action is 'update'
       questionJSON = $.parseJSON(data['question'])
       questionEl = getQuestionEl(questionJSON.id)

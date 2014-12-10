@@ -1,0 +1,21 @@
+li.question data={question: question.id}
+  .row.collapse 
+    .large-3.columns
+      .row.collapse
+        .large-6.columns.text-center.answers-count
+          strong #{question.answers.count}
+          br
+          span answers
+        .large-6.columns.text-center.views-count
+          strong #{question.impressionist_count}
+          br
+          span views
+    .large-9.columns
+        h3.question-link.row.collapse
+          = link_to question.title, question
+        .row.collapse
+          .right
+            .question-author
+              | by  
+              | #{question.author.username} 
+              | #{time_ago_in_words(question.created_at)} ago

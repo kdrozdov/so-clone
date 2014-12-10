@@ -5,10 +5,12 @@ RSpec.describe 'Questions API' do
     it_behaves_like 'API Authenticable'
 
     context 'authorized' do
+      include ActionView::Helpers::DateHelper
+      
       let(:access_token) { create(:access_token) }
-      let!(:questions) { create_list(:question, 2) }
-      let(:question) { questions.first }
+      let!(:questions) { create_list(:question, 2).reverse! }
       let!(:answer) { create(:answer, question: question) }
+      let(:question) { questions.first }
 
       before { do_request(access_token: access_token.token) }
       
@@ -20,21 +22,17 @@ RSpec.describe 'Questions API' do
         expect(response.body).to have_json_size(2).at_path('questions')
       end
 
-      %w{id title body created_at updated_at author_id}.each do |attr|
-        it "question object contains #{attr}" do
-          expect(response.body).to be_json_eql(question.send(attr.to_sym).to_json).at_path("questions/0/#{attr}")
-        end
+      it 'question object contains author' do
+        expect(response.body).to be_json_eql(question.author.username.to_json).at_path('questions/0/author')
       end
 
-      context 'answers' do
-        it 'included in question object' do
-          expect(response.body).to have_json_size(1).at_path('questions/0/answers')
-        end
+      it 'question object contains created_time_ago' do
+        expect(response.body).to be_json_eql(time_ago_in_words(question.created_at).to_json).at_path('questions/0/created_time_ago')
+      end
 
-        %w{id body created_at updated_at author_id}.each do |attr|
-          it "contains #{attr}" do
-            expect(response.body).to be_json_eql(answer.send(attr.to_sym).to_json).at_path("questions/0/answers/0/#{attr}")
-          end
+      %w{id title body impressionist_count created_at updated_at author_id}.each do |attr|
+        it "question object contains #{attr}" do
+          expect(response.body).to be_json_eql(question.send(attr.to_sym).to_json).at_path("questions/0/#{attr}")
         end
       end
     end

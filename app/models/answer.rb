@@ -12,7 +12,7 @@
 
 class Answer < ActiveRecord::Base
   belongs_to :author, class_name: 'User'
-  belongs_to :question
+  belongs_to :question, counter_cache: true
   has_many :attachments, as: :attachmentable, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
 

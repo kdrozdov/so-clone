@@ -4,6 +4,7 @@ class QuestionsController <  ApplicationController
   before_action :set_answer, only: [:show]
   after_action :publish_question, only: [:create, :update, :destroy]
 
+  impressionist actions: [:show]
   authorize_resource
   respond_to :html
 
@@ -45,7 +46,7 @@ class QuestionsController <  ApplicationController
                             action: action_name)
     else
       PrivatePub.publish_to('/questions',
-                            question: @question.to_json,
+                            question: QuestionsSerializer.new(@question, root: false).to_json,
                             action: action_name) if @question.valid?
     end
   end

@@ -1,0 +1,21 @@
+ul.questions li {
+  border-bottom: 1px solid #DDD;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+
+  .question-link {
+    font-size: 1.2rem;
+  }
+
+  .question-author {
+    font-size: 0.8rem;
+  }
+
+  .answers-count {
+    color: #3C763D;
+  }
+
+  .views-count {
+    color: #31708F;
+  }
+}

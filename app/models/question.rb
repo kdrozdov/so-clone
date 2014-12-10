@@ -11,8 +11,10 @@
 #
 
 class Question < ActiveRecord::Base
-  belongs_to :author, class_name: 'User'
 
+  default_scope { order(created_at: :desc) }
+
+  belongs_to :author, class_name: 'User'
   has_many :answers, -> { order 'created_at DESC' }, dependent: :destroy
   has_many :attachments, as: :attachmentable, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
@@ -21,6 +23,7 @@ class Question < ActiveRecord::Base
   validates :title, presence: true, length: { maximum: 255 }
 
   paginates_per 15
+  is_impressionable counter_cache: true, unique: :request_hash
 
   accepts_nested_attributes_for :attachments, reject_if: :all_blank, allow_destroy: true
 end

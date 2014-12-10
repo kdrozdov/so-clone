@@ -129,8 +129,12 @@ GEM
     hike (1.2.3)
     hitimes (1.2.2)
     http_parser.rb (0.6.0)
+    httpclient (2.5.3.3)
     i18n (0.6.11)
     ice_cube (0.11.1)
+    impressionist (1.5.1)
+      httpclient (~> 2.2)
+      nokogiri (~> 1.5)
     jbuilder (2.1.3)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
@@ -348,6 +352,7 @@ DEPENDENCIES
   foreman
   foundation-rails
   handlebars_assets
+  impressionist
   jbuilder (~> 2.0)
   jquery-rails
   json_spec

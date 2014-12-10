@@ -1,1 +1,22 @@
-a[href="/questions/{{id}}"] {{title}}
+.row.collapse
+  .large-3.columns
+    .row.collapse
+      .large-6.columns.text-center.answers-count
+        strong 
+          |{{answers_count}}
+        br
+        span answers
+      .large-6.columns.text-center.views-count
+        strong 
+          |{{impressionist_count}}
+        br
+        span views
+  .large-9.columns
+      h3.question-link.row.collapse
+        a[href="/questions/{{id}}"] {{title}}
+      .row.collapse
+        .right
+          .question-author
+            | by  
+            | {{author}} 
+            | {{created_time_ago}} ago
